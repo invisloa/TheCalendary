@@ -3,13 +3,14 @@
     x:Class="Kalendarzyk.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-    xmlns:local="clr-namespace:Kalendarzyk"
+    xmlns:local="clr-namespace:Kalendarzyk.Views"
     Shell.FlyoutBehavior="Disabled"
     Title="Kalendarzyk">
 
+
     <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+        Title="AddNewEventGroupPage"
+        ContentTemplate="{DataTemplate local:AddNewEventGroupPage}"
+        Route="AddNewEventGroupPage" />
 
 </Shell>
