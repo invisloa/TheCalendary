@@ -64,8 +64,8 @@ namespace Kalendarzyk.ViewModels
         public ObservableCollection<SelectableButtonViewModel> MainButtonVisualsSelectors { get; set; }
         public ObservableCollection<SelectableButtonViewModel> IconsTabsOC { get; set; }
 
-        public string SubmitGroupButtonText => _isEdit ? "SUBMIT CHANGES" : "ADD NEW MAIN TYPE";
-        public string MainTypePlaceholderText => _isEdit ? $"TYPE NEW NAME FOR: {EventGroupName}" : "...NEW MAIN TYPE NAME...";
+        public string SubmitGroupButtonText => _isEdit ? "SUBMIT CHANGES" : "ADD NEW GROUP";
+        public string MainTypePlaceholderText => _isEdit ? $"TYPE NEW NAME FOR: {EventGroupName}" : "...NEW GROUP NAME...";
 
 
         #region Properties

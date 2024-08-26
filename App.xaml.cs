@@ -1,6 +1,7 @@
 ﻿using AsyncAwaitBestPractices;
 using Kalendarzyk.Services;
 using Kalendarzyk.Views;
+using System.Diagnostics;
 
 namespace Kalendarzyk
 {
@@ -12,6 +13,8 @@ namespace Kalendarzyk
 
             MainPage = new AppShell();
             InitializeAppAsync().SafeFireAndForget();
+            Debug.WriteLine("App initialized");
+
 
         }
         private async Task InitializeAppAsync()
