@@ -1,0 +1,49 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Kalendarzyk.Views.AddNewEventTypePage"
+             xmlns:customControls="clr-namespace:Kalendarzyk.Views.CustomControls"
+             xmlns:customControlsButtons="clr-namespace:Kalendarzyk.Views.CustomControls.Buttons"
+             Title="AddNewEventTypePage"
+             x:Name="AddNewEventTypePageName">
+    <ScrollView BackgroundColor="{DynamicResource MainBackgroundColor}">
+    <StackLayout>
+        <customControls:OperationsBarCC IsDeleteButtonVisible="{Binding IsEdit}"
+                                            IsSaveButtonClickable="{Binding CanSubmitTypeCommand}"
+                                            IsShareButtonVisible="False" 
+                                            AsyncSaveButtonCommand="{Binding AsyncSubmitTypeCommand}"
+                                            AsyncDeleteButtonCommand="{Binding AsyncDeleteSelectedEventTypeCommand}"
+                                            IsEventTypesButtonisible="False"
+                                            IsCompletedButtonVisible="False"
+                                            />
+
+        <Grid HorizontalOptions="FillAndExpand" VerticalOptions="Center" Margin="5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="Auto" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Frame Grid.Column="1" Padding="1" HorizontalOptions="CenterAndExpand" WidthRequest="250" >
+
+                <Entry Placeholder="{Binding PlaceholderText}" Text="{Binding TypeName, Mode=TwoWay}" Margin="10"  FontAttributes="Bold" FontSize="Body" IsReadOnly="{Binding IsQuickNoteType}"
+                           HorizontalTextAlignment="Center" BackgroundColor="{Binding ColorButtonsHelperClass.SelectedColor, Mode=TwoWay}" TextColor="{DynamicResource MainTextColor}" VerticalOptions="Fill"/>
+            </Frame>
+
+        </Grid>
+
+
+        <!--Main Event Types Custom Control-->
+        <customControls:EventGroupsSelectorCC BindingContext="{Binding Source={x:Reference AddNewEventTypePageName}, Path=BindingContext}"/>
+
+        <!--EventTypeExtraOptions_TypesCC-->
+
+        <!--<customControls:ExtraOptionsSelectorCC  xxx/>-->
+
+        <!--Possible Colors of events to choose-->
+        <customControlsButtons:ColorButtonsSelectorCC Margin="5" IsVisible="{Binding ExtraOptionsHelperToChangeName.IsColorBtnSelected}"
+               ColorButtonsSelectorHelper="{Binding ColorButtonsHelperClass}" />
+        <!--Down of the screen buttons-->
+
+    </StackLayout>
+</ScrollView>
+</ContentPage>

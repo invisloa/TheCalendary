@@ -132,7 +132,7 @@ namespace Kalendarzyk.ViewModels
         #region private methods
         private void InitializeCommon()
         {
-            _eventsService = Factory.CreateNewEventService();
+            _eventsService = Factory.GetEventService;
             RefreshIconsToShowOC();
             InitializeCommands();
             InitializeSelectors();

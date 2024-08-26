@@ -11,7 +11,6 @@ namespace Kalendarzyk
         {
             InitializeComponent();
 
-            MainPage = new AppShell();
             InitializeAppAsync().SafeFireAndForget();
             Debug.WriteLine("App initialized");
 
@@ -24,6 +23,7 @@ namespace Kalendarzyk
 
             // Initialize the repository
             await Factory.InitializeEventRepository();
+            await Factory.InitializeEventService();
 
             // Once initialized, set the actual main page
             MainPage = new AppShell();

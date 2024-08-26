@@ -4,6 +4,9 @@ using Kalendarzyk.Models.EventTypesModels;
 using Kalendarzyk.Services.Data;
 using Kalendarzyk.ViewModels.CustomControls;
 using Kalendarzyk.ViewModels.CustomControls.Buttons;
+using Kalendarzyk.ViewModels.ModelsViewModels;
+using Kalendarzyk.Views.CustomControls.CCInterfaces;
+using Kalendarzyk.Views.CustomControls.CCViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -16,19 +19,36 @@ using System.Windows.Input;
 namespace Kalendarzyk.Services
 {
     internal class Factory
-    {        // Event Repository Singleton Pattern
+    {
+        // Event Repository Singleton Pattern
         private static IEventRepository _eventRepository;
 
         public static IEventRepository GetEventRepository => _eventRepository;
 
-        public static async Task<IEventRepository> InitializeEventRepository()  // TODO xxx USE IT SOMEWHERE AT STARTUP
+        public static async Task<IEventRepository> InitializeEventRepository()
         {
-            Console.WriteLine("start initialize");
             if (_eventRepository == null)
+            {
                 _eventRepository = await SQLiteRepository.CreateAsync();
-            Console.WriteLine("end initialize");
+            }
             return _eventRepository;
         }
+
+        private static IEventsService _eventsService;
+
+        public static async Task<IEventsService> InitializeEventService()
+        {
+            if (_eventsService == null)
+            {
+                var repository = await InitializeEventRepository();
+                _eventsService = new EventsService(repository);
+                await _eventsService.InitializeDataAsync();
+            }
+            return _eventsService;
+        }
+        public static IEventsService GetEventService => _eventsService;
+
+
         public static ObservableCollection<MeasurementUnitItem> PopulateMeasurementCollection()
         {
             var descriptions = new Dictionary<MeasurementUnit, string>();
@@ -59,10 +79,6 @@ namespace Kalendarzyk.Services
         {
             return new ColorButtonsSelectorViewModel(colorButtons, selectedButtonCommand, startingColor);
         }
-        internal static IEventsService CreateNewEventService()
-        {
-            return new EventsService(_eventRepository);
-        }
 
         internal static IconModel CreateGroupVisualElement(string selectedIconString, Color backgroundColor, Color textColor)
         {
@@ -72,5 +88,18 @@ namespace Kalendarzyk.Services
         {
             return new EventGroupModel(mainTypeName, iconForEventGroup);
         }
+        internal static DefaultTimespanCCViewModel CreateNewDefaultEventTimespanCCHelperClass()
+        {
+            return new DefaultTimespanCCViewModel();
+        }
+        internal static ChangableFontsIconCCViewModel CreateNewChangableFontsIconAdapter(bool isSelected, string selectedIconText, string notSelectedIconText)
+        {
+            return new ChangableFontsIconCCViewModel(isSelected, selectedIconText, notSelectedIconText);
+        }
+        public static IEventGroupsCCViewModel CreateNewIEventGroupViewModelClass(ObservableCollection<EventGroupModel> eventGroups)
+        {
+            return new EventGroupsSelectorCCViewModel(eventGroups);
+        }
+
     }
 }

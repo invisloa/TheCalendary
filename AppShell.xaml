@@ -7,10 +7,15 @@
     Shell.FlyoutBehavior="Disabled"
     Title="Kalendarzyk">
 
+    <ShellContent
+        Title="sss"
+        ContentTemplate="{DataTemplate local:AddNewEventTypePage}"
+        Route="AddNewEventTypePage" />
 
     <ShellContent
         Title="AddNewEventGroupPage"
         ContentTemplate="{DataTemplate local:AddNewEventGroupPage}"
         Route="AddNewEventGroupPage" />
+
 
 </Shell>

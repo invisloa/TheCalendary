@@ -18,12 +18,10 @@ namespace Kalendarzyk.Services.Data
         public EventsService(IEventRepository eventRepository)
         {
             _eventRepository = eventRepository;
-            InitializeDataAsync();
         }
 
-        private async Task InitializeDataAsync()
+        public async Task InitializeDataAsync()
         {
-            await Factory.InitializeEventRepository().ConfigureAwait(false);
             var events = await _eventRepository.GetEventsListAsync().ConfigureAwait(false);
             AllEventsOC = new ObservableCollection<EventModel>(events.ToList());
 
@@ -61,6 +59,31 @@ namespace Kalendarzyk.Services.Data
             // Finally, delete the event group itself
             AllEventGroupsOC.Remove(groupToDelete);
             await _eventRepository.DeleteEventGroupAsync(groupToDelete);
+        }
+
+        public async Task DeleteEvenTypeAsync(EventTypeModel eventTypeToDelete)
+        {
+            // Delete all events that belong to the event type
+            var eventsToDelete = AllEventsOC
+                .Where(e => e.EventType.Equals(eventTypeToDelete))
+                .ToList();
+
+            foreach (var eventModel in eventsToDelete)
+            {
+                AllEventsOC.Remove(eventModel);
+                await _eventRepository.DeleteEventAsync(eventModel);
+            }
+
+            // Delete the event type
+            AllEventTypesOC.Remove(eventTypeToDelete);
+            await _eventRepository.DeleteEventTypeAsync(eventTypeToDelete);
+        }
+
+        public async Task DeleteEvenAsync(EventModel eventToDelete)
+        {
+            // Delete the event
+            AllEventsOC.Remove(eventToDelete);
+            await _eventRepository.DeleteEventAsync(eventToDelete);
         }
     }
 }
