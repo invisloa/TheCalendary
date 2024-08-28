@@ -29,7 +29,16 @@ namespace Kalendarzyk.ViewModels
 				OnPropertyChanged();
 			}
 		}
-		public ObservableCollection<EventGroupViewModel> EventGroupsVisualsOC { get => _eventGroupsCCHelper.EventGroupsVisualsOC; set => _eventGroupsCCHelper.EventGroupsVisualsOC = value; }
+		private ObservableCollection<EventGroupViewModel> _eventGroupsOC;
+		public ObservableCollection<EventGroupViewModel> EventGroupsVisualsOC
+        {
+            get => _eventGroupsOC;
+            set
+            {
+                _eventGroupsOC = value;
+                OnPropertyChanged();
+            }
+        }
 		public DefaultTimespanCCViewModel DefaultEventTimespanCCHelper { get; set; } = Factory.CreateNewDefaultEventTimespanCCHelperClass();
 		#region Fields
 		private IEventGroupsCCViewModel _eventGroupsCCHelper;
@@ -38,11 +47,9 @@ namespace Kalendarzyk.ViewModels
 		private IEventRepository _eventRepository;
 		private IColorButtonsSelectorHelperClass _colorButtonsHelperClass = Factory.CreateNewIColorButtonsHelperClass(startingColor: Colors.Red);
 		public IColorButtonsSelectorHelperClass ColorButtonsHelperClass { get => _colorButtonsHelperClass; }
-
 		#endregion
 
 		#region Properties
-
 		public string QuantityValueText => IsEdit ? "DEFAULT VALUE:" : "Value:";
 		public string PageTitle => IsEdit ? "EDIT TYPE" : "ADD NEW TYPE";
 		public string PlaceholderText => IsEdit ? $"TYPE NEW NAME FOR: {TypeName}" : "...NEW TYPE NAME...";
@@ -132,8 +139,7 @@ namespace Kalendarzyk.ViewModels
 			CurrentType = currentType;
 			InitializeCommon();
 
-			OnEventGroupSelectedCommand(new EventGroupViewModel(currentType.EventGroup));  // pass some new main event type view model not the one that is on the list!!!
-																									//EventGroupsCCHelper.SelectedEventGroup = currentType.EventGroup;
+			OnEventGroupSelectedCommand(new EventGroupViewModel(currentType.EventGroup));  
 			ColorButtonsHelperClass.SelectedColor = Color.FromArgb(currentType.EventTypeColorString);
 			TypeName = currentType.EventTypeName;
 			DefaultEventTimespanCCHelper.SetControlsValues(currentType.DefaultEventTimeSpan);
@@ -145,11 +151,9 @@ namespace Kalendarzyk.ViewModels
 		{
 			InitializeColorButtons();
 			EventTypesInfoButton = Factory.CreateNewChangableFontsIconAdapter(true, "info", "info_outline");
-
-			_eventGroupsCCHelper = Factory.CreateNewIEventGroupViewModelClass(_eventService.AllEventGroupsOC);
+            _eventGroupsCCHelper = Factory.CreateNewIEventGroupViewModelClass(_eventService.AllEventGroupsOC);
 			bool isEditMode = CurrentType != null;
-			//EventTypeExtraOptionsHelper = Factory.CreateNewEventTypeExtraOptionsHelperClass(isEditMode);
-			//GoToAllEventTypesPageCommand = new RelayCommand(GoToAllEventTypesPage);
+
 			AsyncSubmitTypeCommand = new AsyncRelayCommand(AsyncSubmitType, CanExecuteAsyncSubmitTypeCommand);
 			_eventGroupsCCHelper.EventGroupChanged += OnEventGroupChanged;
 

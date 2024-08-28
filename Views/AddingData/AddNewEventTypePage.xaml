@@ -31,8 +31,7 @@
 
         </Grid>
 
-
-        <!--Main Event Types Custom Control-->
+            <!--Main Event Types Custom Control-->
         <customControls:EventGroupsSelectorCC BindingContext="{Binding Source={x:Reference AddNewEventTypePageName}, Path=BindingContext}"/>
 
             <Button Text="XXXX" Clicked="Button_Clicked"/>

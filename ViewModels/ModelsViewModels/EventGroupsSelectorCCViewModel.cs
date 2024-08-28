@@ -94,7 +94,7 @@ namespace Kalendarzyk.ViewModels.ModelsViewModels
 
         public void RefreshGroups()
         {
-            EventGroupsVisualsOC.Clear();
+            EventGroupsVisualsOC = new ObservableCollection<EventGroupViewModel>();
 
             foreach (EventGroupModel eventType in _eventGroupsList)
             {
