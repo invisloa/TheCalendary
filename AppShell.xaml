@@ -7,15 +7,25 @@
     Shell.FlyoutBehavior="Disabled"
     Title="Kalendarzyk">
 
-    <ShellContent
-        Title="sss"
-        ContentTemplate="{DataTemplate local:AddNewEventTypePage}"
-        Route="AddNewEventTypePage" />
 
-    <ShellContent
-        Title="AddNewEventGroupPage"
-        ContentTemplate="{DataTemplate local:AddNewEventGroupPage}"
-        Route="AddNewEventGroupPage" />
+    <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
+        <Tab Title="Favorites">
+            <ShellContent
+                Title="AddNewEventTypePage"
+                ContentTemplate="{DataTemplate local:AddNewEventTypePage}"
+                Route="Faasdasd" />
+            <ShellContent
+                Title="AddNewEventGroupPage"
+                ContentTemplate="{DataTemplate local:AddNewEventGroupPage}"
+                Route="Daily Events" />
+            <ShellContent
+                Title="Admin page"
+                ContentTemplate="{DataTemplate local:AdminPage}"
+                Route="AdminPage" />
+
+        </Tab>
+    </FlyoutItem>
+
 
 
 </Shell>

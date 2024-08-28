@@ -1,7 +1,7 @@
 ﻿using SQLite;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace Kalendarzyk.Models.EventTypesModels
+namespace Kalendarzyk.Models.EventModels
 {
     [SQLite.Table("EventGroupModel")]
 
@@ -18,7 +18,7 @@ namespace Kalendarzyk.Models.EventTypesModels
         [Ignore]
         public IconModel SelectedVisualElement { get; set; }
 
-        public EventGroupModel() 
+        public EventGroupModel()
         {
             SelectedVisualElement = new IconModel();
         }

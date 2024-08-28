@@ -1,6 +1,6 @@
 ﻿using SQLite;
 
-namespace Kalendarzyk.Models
+namespace Kalendarzyk.Models.EventModels
 {
     [Table("IconModel")]
     public class IconModel

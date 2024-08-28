@@ -1,6 +1,4 @@
-﻿using Kalendarzyk.Models;
-using Kalendarzyk.Models.EventModels;
-using Kalendarzyk.Models.EventTypesModels;
+﻿using Kalendarzyk.Models.EventModels;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -130,7 +128,19 @@ namespace Kalendarzyk.Services.Data
         {
             try
             {
+                // Step 1: Insert the IconModel to the database
+                await _database.InsertAsync(eventGroupToAdd.SelectedVisualElement);
+
+                // Step 2: Retrieve the generated ID of the inserted IconModel
+                int iconId = eventGroupToAdd.SelectedVisualElement.Id; // The Id is set automatically after insertion
+
+                // Step 3: Assign this ID to the EventGroupModel's SelectedVisualElementId
+                eventGroupToAdd.SelectedVisualElementId = iconId;
+
+                // Step 4: Insert the EventGroupModel into the database
                 await _database.InsertAsync(eventGroupToAdd);
+
+
                 return OperationResult.Success();
             }
             catch (SQLiteException ex) when (ex.Message.Contains("UNIQUE constraint failed"))
@@ -143,11 +153,18 @@ namespace Kalendarzyk.Services.Data
             }
         }
 
+
         public async Task<IEnumerable<EventGroupModel>> GetEventGroupsListAsync()
         {
             try
             {
-                return await _database.Table<EventGroupModel>().ToListAsync();
+                var eventGroups = await _database.Table<EventGroupModel>().ToListAsync();
+                foreach (var eventGroup in eventGroups)
+                {
+                    eventGroup.SelectedVisualElement = await _database.Table<IconModel>()
+                        .FirstOrDefaultAsync(icon => icon.Id == eventGroup.SelectedVisualElementId);
+                }
+                return eventGroups;
             }
             catch (Exception ex)
             {
@@ -155,6 +172,7 @@ namespace Kalendarzyk.Services.Data
                 return Enumerable.Empty<EventGroupModel>(); // Return an empty list in case of failure
             }
         }
+
 
         public async Task<OperationResult> UpdateEventGroupAsync(EventGroupModel eventGroupToUpdate)
         {

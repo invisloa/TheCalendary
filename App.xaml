@@ -26,7 +26,7 @@
             <Color x:Key="MainTextboxesBackgroundColor">#273567</Color>
             <Color x:Key="DeselectedBackgroundColor">#8198B2</Color>
             <Color x:Key="MainMicroTaskBackgroundColor">#069</Color>
-            <Color x:Key="MainEventDeselectedBackgroundColor">#000</Color>
+            <Color x:Key="EventGroupDeselectedColor">#000</Color>
 
             <Style x:Key="DangerButtonStyle" TargetType="Button">
                 <Setter Property="BackgroundColor" Value="#E74C3C" />

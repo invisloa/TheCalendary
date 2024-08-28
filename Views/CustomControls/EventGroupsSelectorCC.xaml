@@ -39,14 +39,14 @@
                                 <Label 
 
                             Text="{Binding EventGroup.SelectedVisualElement.ElementName}" 
-                            TextColor="{Binding EventGroup.SelectedVisualElement.TextColor}" 
+                            TextColor="AliceBlue"
                             Style="{StaticResource GoogleFont}" 
                             HorizontalOptions="Center" 
                             VerticalOptions="Center"></Label>
 
                             </Frame>
                         </StackLayout >
-                        <Label Text="{Binding MainEventTitle}" VerticalOptions="Center" HorizontalOptions="Center"  
+                        <Label Text="{Binding EventGroupName}" VerticalOptions="Center" HorizontalOptions="Center"  
                            Scale="{Binding IsSelected, Converter={StaticResource boolToScaleConverter}}"
                                     Opacity="{Binding IsSelected, Converter={StaticResource boolToAlphaConverter}}"/>
                     </StackLayout>
@@ -56,14 +56,3 @@
         </FlexLayout>
     </VerticalStackLayout>
 </ContentView>
-
-
-
-
-
-
-
-
-
-
-

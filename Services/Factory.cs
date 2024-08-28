@@ -1,6 +1,4 @@
-﻿using Kalendarzyk.Models;
-using Kalendarzyk.Models.EventModels;
-using Kalendarzyk.Models.EventTypesModels;
+﻿using Kalendarzyk.Models.EventModels;
 using Kalendarzyk.Services.Data;
 using Kalendarzyk.ViewModels.CustomControls;
 using Kalendarzyk.ViewModels.CustomControls.Buttons;

@@ -1,6 +1,4 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using Kalendarzyk.Models.EventTypesModels;
-using Kalendarzyk.ViewModels;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
@@ -11,12 +9,13 @@ using Kalendarzyk.Services.Data;
 using Kalendarzyk.ViewModels.CustomControls;
 using Kalendarzyk.Services;
 using Kalendarzyk.ViewModels.CustomControls.Buttons;
-using Kalendarzyk.ViewModels.Events;
 using Kalendarzyk.Helpers;
+using Kalendarzyk.Models.EventModels;
+using Kalendarzyk.ViewModels.ModelsViewModels;
 
-namespace Kalendarzyk.ViewModels
+namespace Kalendarzyk.ViewModels.Event
 {
-    internal class AddNewEventGroupViewModel : BaseViewModel
+    internal class AddNewEventGroupPageViewModel : BaseViewModel
     {
 
         private readonly IEventRepository _eventRepository;
@@ -108,7 +107,7 @@ namespace Kalendarzyk.ViewModels
 
         #region Constructors
         //Constructor for create mode
-        public AddNewEventGroupViewModel()
+        public AddNewEventGroupPageViewModel()
         {
             _currentGroup = new EventGroupModel();
             IsEdit = false;
@@ -116,7 +115,7 @@ namespace Kalendarzyk.ViewModels
             InitializeCommon();
         }
         //Constructor for edit mode
-        public AddNewEventGroupViewModel(EventGroupModel currentGroupModel)
+        public AddNewEventGroupPageViewModel(EventGroupModel currentGroupModel)
         {
             IsEdit = true;
             _eventRepository = Factory.GetEventRepository;
@@ -186,7 +185,7 @@ namespace Kalendarzyk.ViewModels
             if (_isEdit)
             {
                 _currentGroup.SelectedVisualElement = iconForEventGroup;
-                var result = await _eventRepository.UpdateEventGroupAsync(_currentGroup);
+                var result = await _eventsService.UpdateEventGroupAsync(_currentGroup);
 
                 if (result.IsSuccess)
                 {
@@ -194,13 +193,13 @@ namespace Kalendarzyk.ViewModels
                 }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Error", result.ErrorMessage, "OK");
+                    await Application.Current.MainPage.DisplayAlert("Error", result.ErrorMessage, "OK");
                 }
             }
             else
             {
-                var newMainType = Factory.CreateNewEventGroup(EventGroupName, iconForEventGroup);
-                var result = await _eventRepository.AddEventGroupAsync(newMainType);
+                var newEventGroup = Factory.CreateNewEventGroup(EventGroupName, iconForEventGroup);
+                var result = await _eventsService.AddEventGroupAsync(newEventGroup);
 
                 if (result.IsSuccess)
                 {
@@ -208,7 +207,7 @@ namespace Kalendarzyk.ViewModels
                 }
                 else
                 {
-                    await App.Current.MainPage.DisplayAlert("Error", result.ErrorMessage, "OK");
+                    await Application.Current.MainPage.DisplayAlert("Error", result.ErrorMessage, "OK");
                 }
             }
         }
@@ -221,7 +220,7 @@ namespace Kalendarzyk.ViewModels
             var eventTypesInDb = _eventsService.AllEventTypesOC.Where(x => x.EventGroupId == _currentGroup.Id);
             if (eventTypesInDb.Any())
             {
-                var action = await App.Current.MainPage.DisplayActionSheet("This main type is used...", "Cancel", null, "Delete all associated data", "\n", "Go to All EventTypes Page");
+                var action = await Application.Current.MainPage.DisplayActionSheet("This main type is used...", "Cancel", null, "Delete all associated data", "\n", "Go to All EventTypes Page");
                 switch (action)
                 {
                     case "Delete all associated data":

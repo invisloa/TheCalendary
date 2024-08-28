@@ -1,6 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using Kalendarzyk.Models;
-using Kalendarzyk.Models.EventTypesModels;
+using Kalendarzyk.Models.EventModels;
 using Kalendarzyk.Views.CustomControls.CCInterfaces;
 using System;
 using System.Collections.Generic;
@@ -65,11 +64,11 @@ namespace Kalendarzyk.ViewModels.ModelsViewModels
             _eventGroupsList = eventGroupsList ?? throw new ArgumentNullException(nameof(eventGroupsList));
             _eventVisualDetails = new Dictionary<EventGroupModel, EventGroupViewModel>();
             EventGroupSelectedCommand = new RelayCommand<EventGroupViewModel>(SetEventGroupFromViewModel);
-            InitializeEventGroupsVisuals();
+            RefreshGroups();
         }
 
         // Private Methods
-        private void SetEventGroupFromViewModel(EventGroupViewModel viewModel)
+        private void SetEventGroupFromViewModel(EventGroupViewModel viewModel)  // collection contains objects of type EventGroupViewModel thats why we need to convert it to EventGroupModel
         {
             var selectedEventGroup = _eventGroupsList.FirstOrDefault(o => o.Equals(viewModel.EventGroup));
             if (selectedEventGroup == null)
@@ -88,14 +87,14 @@ namespace Kalendarzyk.ViewModels.ModelsViewModels
 
             if (SelectedEventGroup != null && _eventVisualDetails.ContainsKey(SelectedEventGroup))
             {
-                var mainEventToSelect = _eventVisualDetails[SelectedEventGroup];
-                mainEventToSelect.IsSelected = true;
+                var eventGroupToSelect = _eventVisualDetails[SelectedEventGroup];
+                eventGroupToSelect.IsSelected = true;
             }
         }
 
-        private void InitializeEventGroupsVisuals()
+        public void RefreshGroups()
         {
-            EventGroupsVisualsOC = new ObservableCollection<EventGroupViewModel>();
+            EventGroupsVisualsOC.Clear();
 
             foreach (EventGroupModel eventType in _eventGroupsList)
             {

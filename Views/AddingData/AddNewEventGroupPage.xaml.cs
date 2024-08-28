@@ -1,4 +1,4 @@
-using Kalendarzyk.ViewModels;
+using Kalendarzyk.ViewModels.Event;
 
 namespace Kalendarzyk.Views;
 
@@ -6,7 +6,7 @@ public partial class AddNewEventGroupPage : ContentPage
 {
 	public AddNewEventGroupPage()
 	{
-		AddNewEventGroupViewModel viewModel = new AddNewEventGroupViewModel();
+		AddNewEventGroupPageViewModel viewModel = new AddNewEventGroupPageViewModel();
 		InitializeComponent();
 		BindingContext = viewModel;
 	}

@@ -1,6 +1,5 @@
 ﻿using AsyncAwaitBestPractices;
 using Kalendarzyk.Models.EventModels;
-using Kalendarzyk.Models.EventTypesModels;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
@@ -32,58 +31,123 @@ namespace Kalendarzyk.Services.Data
             AllEventGroupsOC = new ObservableCollection<EventGroupModel>(eventGroups.ToList());
         }
 
-        public async Task DeleteEventGroupAsync(EventGroupModel groupToDelete)
+        public async Task<OperationResult> AddEventAsync(EventModel eventToAdd)
         {
-            // Delete all events that belong to the event group
-            var eventsToDelete = AllEventsOC
-                .Where(e => e.EventType.EventGroup.Equals(groupToDelete))
-                .ToList();
-
-            foreach (var eventModel in eventsToDelete)
+            var result = await _eventRepository.AddEventAsync(eventToAdd);
+            if (result.IsSuccess)
             {
-                AllEventsOC.Remove(eventModel);
-                await _eventRepository.DeleteEventAsync(eventModel);
+                AllEventsOC.Add(eventToAdd);
             }
-
-            // Delete all event types that belong to the event group
-            var eventTypesToDelete = AllEventTypesOC
-                .Where(et => et.EventGroup.Equals(groupToDelete))
-                .ToList();
-
-            foreach (var eventType in eventTypesToDelete)
-            {
-                AllEventTypesOC.Remove(eventType);
-                await _eventRepository.DeleteEventTypeAsync(eventType);
-            }
-
-            // Finally, delete the event group itself
-            AllEventGroupsOC.Remove(groupToDelete);
-            await _eventRepository.DeleteEventGroupAsync(groupToDelete);
+            return result;
         }
 
-        public async Task DeleteEvenTypeAsync(EventTypeModel eventTypeToDelete)
+        public async Task<OperationResult> UpdateEventAsync(EventModel eventToUpdate)
         {
-            // Delete all events that belong to the event type
+            return await _eventRepository.UpdateEventAsync(eventToUpdate);
+        }
+
+        public async Task<OperationResult> DeleteEventAsync(EventModel eventToDelete)
+        {
+            var result = await _eventRepository.DeleteEventAsync(eventToDelete);
+            if (result.IsSuccess)
+            {
+                AllEventsOC.Remove(eventToDelete);
+            }
+            return result;
+        }
+
+        public async Task<OperationResult> AddEventTypeAsync(EventTypeModel eventTypeToAdd)
+        {
+            var result = await _eventRepository.AddEventTypeAsync(eventTypeToAdd);
+            if (result.IsSuccess)
+            {
+                AllEventTypesOC.Add(eventTypeToAdd);
+            }
+            return result;
+        }
+
+        public async Task<OperationResult> UpdateEventTypeAsync(EventTypeModel eventTypeToUpdate)
+        {
+            return await _eventRepository.UpdateEventTypeAsync(eventTypeToUpdate);
+        }
+
+        public async Task<OperationResult> DeleteEventTypeAsync(EventTypeModel eventTypeToDelete)
+        {
             var eventsToDelete = AllEventsOC
                 .Where(e => e.EventType.Equals(eventTypeToDelete))
                 .ToList();
 
             foreach (var eventModel in eventsToDelete)
             {
+                var deleteEventResult = await _eventRepository.DeleteEventAsync(eventModel);
+                if (!deleteEventResult.IsSuccess)
+                {
+                    return OperationResult.Failure($"Failed to delete event: {deleteEventResult.ErrorMessage}");
+                }
                 AllEventsOC.Remove(eventModel);
-                await _eventRepository.DeleteEventAsync(eventModel);
             }
 
-            // Delete the event type
-            AllEventTypesOC.Remove(eventTypeToDelete);
-            await _eventRepository.DeleteEventTypeAsync(eventTypeToDelete);
+            var deleteEventTypeResult = await _eventRepository.DeleteEventTypeAsync(eventTypeToDelete);
+            if (deleteEventTypeResult.IsSuccess)
+            {
+                AllEventTypesOC.Remove(eventTypeToDelete);
+            }
+
+            return deleteEventTypeResult;
         }
 
-        public async Task DeleteEvenAsync(EventModel eventToDelete)
+        public async Task<OperationResult> AddEventGroupAsync(EventGroupModel eventGroupToAdd)
         {
-            // Delete the event
-            AllEventsOC.Remove(eventToDelete);
-            await _eventRepository.DeleteEventAsync(eventToDelete);
+            var result = await _eventRepository.AddEventGroupAsync(eventGroupToAdd);
+            if (result.IsSuccess)
+            {
+                AllEventGroupsOC.Add(eventGroupToAdd);
+            }
+            return result;
+        }
+
+        public async Task<OperationResult> UpdateEventGroupAsync(EventGroupModel eventGroupToUpdate)
+        {
+            return await _eventRepository.UpdateEventGroupAsync(eventGroupToUpdate);
+        }
+
+        public async Task<OperationResult> DeleteEventGroupAsync(EventGroupModel groupToDelete)
+        {
+            var eventsToDelete = AllEventsOC
+                .Where(e => e.EventType.EventGroup.Equals(groupToDelete))
+                .ToList();
+
+            foreach (var eventModel in eventsToDelete)
+            {
+                var deleteEventResult = await _eventRepository.DeleteEventAsync(eventModel);
+                if (!deleteEventResult.IsSuccess)
+                {
+                    return OperationResult.Failure($"Failed to delete event: {deleteEventResult.ErrorMessage}");
+                }
+                AllEventsOC.Remove(eventModel);
+            }
+
+            var eventTypesToDelete = AllEventTypesOC
+                .Where(et => et.EventGroup.Equals(groupToDelete))
+                .ToList();
+
+            foreach (var eventType in eventTypesToDelete)
+            {
+                var deleteEventTypeResult = await _eventRepository.DeleteEventTypeAsync(eventType);
+                if (!deleteEventTypeResult.IsSuccess)
+                {
+                    return OperationResult.Failure($"Failed to delete event type: {deleteEventTypeResult.ErrorMessage}");
+                }
+                AllEventTypesOC.Remove(eventType);
+            }
+
+            var deleteGroupResult = await _eventRepository.DeleteEventGroupAsync(groupToDelete);
+            if (deleteGroupResult.IsSuccess)
+            {
+                AllEventGroupsOC.Remove(groupToDelete);
+            }
+
+            return deleteGroupResult;
         }
     }
 }

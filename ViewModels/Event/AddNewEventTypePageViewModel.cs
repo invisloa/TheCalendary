@@ -2,7 +2,6 @@
 using CommunityToolkit.Mvvm.Input;
 using Kalendarzyk.Helpers;
 using Kalendarzyk.Models.EventModels;
-using Kalendarzyk.Models.EventTypesModels;
 using Kalendarzyk.Services;
 using Kalendarzyk.Views;
 using Kalendarzyk.Views.CustomControls.CCInterfaces;
@@ -19,7 +18,7 @@ namespace Kalendarzyk.ViewModels
     public class AddNewEventTypePageViewModel : BaseViewModel
 	{
 
-		private IEventsService eventsService = Factory.GetEventService;
+		private IEventsService _eventService = Factory.GetEventService;
         private ChangableFontsIconCCViewModel _eventTypesInfoButton;
 		public ChangableFontsIconCCViewModel EventTypesInfoButton
 		{
@@ -30,7 +29,6 @@ namespace Kalendarzyk.ViewModels
 				OnPropertyChanged();
 			}
 		}
-		// TODO ! CHANGE THE BELOW CLASS TO VIEW MODEL 
 		public ObservableCollection<EventGroupViewModel> EventGroupsVisualsOC { get => _eventGroupsCCHelper.EventGroupsVisualsOC; set => _eventGroupsCCHelper.EventGroupsVisualsOC = value; }
 		public DefaultTimespanCCViewModel DefaultEventTimespanCCHelper { get; set; } = Factory.CreateNewDefaultEventTimespanCCHelperClass();
 		#region Fields
@@ -147,7 +145,8 @@ namespace Kalendarzyk.ViewModels
 		{
 			InitializeColorButtons();
 			EventTypesInfoButton = Factory.CreateNewChangableFontsIconAdapter(true, "info", "info_outline");
-			_eventGroupsCCHelper = Factory.CreateNewIEventGroupViewModelClass(eventsService.AllEventGroupsOC);
+
+			_eventGroupsCCHelper = Factory.CreateNewIEventGroupViewModelClass(_eventService.AllEventGroupsOC);
 			bool isEditMode = CurrentType != null;
 			//EventTypeExtraOptionsHelper = Factory.CreateNewEventTypeExtraOptionsHelperClass(isEditMode);
 			//GoToAllEventTypesPageCommand = new RelayCommand(GoToAllEventTypesPage);
@@ -161,14 +160,6 @@ namespace Kalendarzyk.ViewModels
 		{
 			AsyncSubmitTypeCommand.NotifyCanExecuteChanged();
 		}
-		/*	???? dont know if this is needed after refactoring extra options helper class
-		 *	 *
-		private void setIsVisibleForExtraControlsInEditMode()
-		{
-			EventTypeExtraOptionsHelper.IsValueTypeSelected = CurrentType.IsValueType;
-			EventTypeExtraOptionsHelper.IsMicroTaskTypeSelected = CurrentType.IsMicroTaskType;
-			EventTypeExtraOptionsHelper.IsDefaultEventTimespanSelected = CurrentType.DefaultEventTimeSpan != TimeSpan.Zero;
-		}*/
 		#endregion
 
 
@@ -176,14 +167,14 @@ namespace Kalendarzyk.ViewModels
 		private async Task AsyncDeleteSelectedEventType()
 		{
 
-			var eventTypesInDb = eventsService.AllEventsOC.Where(x => x.EventType.Equals(_currentType));
+			var eventTypesInDb = _eventService.AllEventsOC.Where(x => x.EventType.Equals(_currentType));
 			if (eventTypesInDb.Any())
 			{
 				var action = await App.Current.MainPage.DisplayActionSheet("This type is used in some events.", "Cancel", null, "Delete all associated events", "Go to All Events Page");
 				switch (action)
 				{
 					case "Delete all associated events":
-						await eventsService.DeleteEvenTypeAsync(_currentType);
+						await _eventService.DeleteEventTypeAsync(_currentType);
 						break;
 					case "Go to All Events Page":
 						// Redirect to the All Events Page.
@@ -209,7 +200,7 @@ namespace Kalendarzyk.ViewModels
 					_currentType.EventTypeColorString = ColorButtonsHelperClass.SelectedColor.ToArgbHex();
 					
 
-					await _eventRepository.UpdateEventTypeAsync(_currentType);
+					await _eventService.UpdateEventTypeAsync(_currentType);
 					await Shell.Current.GoToAsync("..");    // TODO CHANGE NOT WORKING!!!
 			}
 			else

@@ -1,5 +1,4 @@
 ﻿using Kalendarzyk.Models.EventModels;
-using Kalendarzyk.Models.EventTypesModels;
 using System;
 using System.Collections.Generic;
 using System.Linq;

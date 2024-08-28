@@ -1,8 +1,7 @@
 ﻿using SQLite;
-using Kalendarzyk.Models.EventModels;
 using System;
 
-namespace Kalendarzyk.Models.EventTypesModels
+namespace Kalendarzyk.Models.EventModels
 {
     [Table("EventTypeModel")]
     public class EventTypeModel

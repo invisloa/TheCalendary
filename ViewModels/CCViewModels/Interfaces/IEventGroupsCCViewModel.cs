@@ -1,5 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
-using Kalendarzyk.Models.EventTypesModels;
+using Kalendarzyk.Models.EventModels;
 using Kalendarzyk.ViewModels.ModelsViewModels;
 using System.Collections.ObjectModel;
 
@@ -16,5 +16,7 @@ namespace Kalendarzyk.Views.CustomControls.CCInterfaces
 		ObservableCollection<EventGroupViewModel> EventGroupsVisualsOC { get; set; }
 		RelayCommand<EventGroupViewModel> EventGroupSelectedCommand { get; }
 		public event Action<EventGroupModel> EventGroupChanged;
-	}
+        public void RefreshGroups();
+
+    }
 }
