@@ -2,6 +2,9 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Kalendarzyk.Views.AddNewEventTypePage"
              xmlns:customControls="clr-namespace:Kalendarzyk.Views.CustomControls"
+             xmlns:customControlsExtraOption="clr-namespace:Kalendarzyk.Views.CustomControls.ExtraOptionsCC"
+             
+             
              xmlns:customControlsButtons="clr-namespace:Kalendarzyk.Views.CustomControls.Buttons"
              Title="AddNewEventTypePage"
              x:Name="AddNewEventTypePageName">
@@ -34,16 +37,17 @@
             <!--Main Event Types Custom Control-->
         <customControls:EventGroupsSelectorCC BindingContext="{Binding Source={x:Reference AddNewEventTypePageName}, Path=BindingContext}"/>
 
-            <Button Text="XXXX" Clicked="Button_Clicked"/>
+            <customControlsExtraOption:ExtraOptionsSelectorCC  />
 
-            <!--EventTypeExtraOptions_TypesCC-->
-
-        <!--<customControls:ExtraOptionsSelectorCC  xxx/>-->
-
-        <!--Possible Colors of events to choose-->
-        <customControlsButtons:ColorButtonsSelectorCC Margin="5"
+            <!--MOVE THOSE 3 TO ExtraOptionsSelectorCC-->
+            <!--VALUE CC-->
+            <customControls:MeasurementSelectorCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsValueBtnSelected}"/>
+            <!--MicroTasks CC-->
+            <customControls:MicroTasksListCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsMicroTasksBtnSelected}" />
+            <!--Possible Colors of events to choose-->
+            <customControlsButtons:ColorButtonsSelectorCC Margin="5" IsVisible="{Binding ExtraOptionsHelperToChangeName.IsColorBtnSelected}"
                ColorButtonsSelectorHelper="{Binding ColorButtonsHelperClass}" />
-        <!--Down of the screen buttons-->
+            <!--Down of the screen buttons-->
 
     </StackLayout>
 </ScrollView>

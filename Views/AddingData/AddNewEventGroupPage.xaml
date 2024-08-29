@@ -37,12 +37,12 @@
 
             </Grid>
 
-            <customControls:SelectableButtonsFlexLayoutCC ItemsSource="{Binding MainButtonVisualsSelectors}"  AlignItems="Center" JustifyContent="Center" />
+            <customControls:SelectableButtonFlexLayoutCC ItemsSource="{Binding MainButtonVisualsSelectors}"  AlignItems="Center" JustifyContent="Center" />
 
 
             <!-- TO SHOW ONLY IF ICONS ARE SELECTED !!!-->
             <StackLayout Margin="10">
-                <customControls:SelectableButtonsFlexLayoutCC ItemsSource="{Binding IconsTabsOC, Mode=TwoWay}" AlignItems="Center" JustifyContent="Center" />
+                <customControls:SelectableButtonFlexLayoutCC ItemsSource="{Binding IconsTabsOC, Mode=TwoWay}" AlignItems="Center" JustifyContent="Center" />
                 <!-- Icon Selection UI -->
                 <!-- TO SHOW ONLY IF ICONS ARE SELECTED !!!-->
                 <CollectionView ItemsSource="{Binding IconsToShowStringsOC, Mode=TwoWay}" HorizontalOptions="FillAndExpand" Margin="30"  IsVisible="True">

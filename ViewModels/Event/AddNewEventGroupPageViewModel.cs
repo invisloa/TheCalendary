@@ -1,5 +1,4 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -75,7 +74,7 @@ namespace Kalendarzyk.ViewModels.Event
             {
                 _currentGroup.GroupName = value;
                 OnPropertyChanged();
-                AsyncSubmitGroupCommand.NotifyCanExecuteChanged();
+                AsyncSubmitGroupCommand.RaiseCanExecuteChanged();
             }
         }
         public bool IsEdit

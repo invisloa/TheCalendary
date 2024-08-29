@@ -1,5 +1,4 @@
 ﻿
-using CommunityToolkit.Mvvm.Input;
 using Kalendarzyk.Helpers;
 using Kalendarzyk.Models.EventModels;
 using Kalendarzyk.Services;
@@ -12,6 +11,8 @@ using Kalendarzyk.Views.CustomControls.CCViewModels;
 using Kalendarzyk.Services.Data;
 using Kalendarzyk.ViewModels.CustomControls;
 using Kalendarzyk.ViewModels.CustomControls.Buttons;
+using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
 
 namespace Kalendarzyk.ViewModels
 {
@@ -83,7 +84,7 @@ namespace Kalendarzyk.ViewModels
 			{
 				if (value == _typeName) return;
 				_typeName = value;
-				AsyncSubmitTypeCommand.NotifyCanExecuteChanged();
+				AsyncSubmitTypeCommand.RaiseCanExecuteChanged();
 				SetCanSubmitTypeCommand();
 				OnPropertyChanged();
 			}
@@ -124,12 +125,18 @@ namespace Kalendarzyk.ViewModels
 		// constructor for create mode
 		public AddNewEventTypePageViewModel()
 		{
-			_eventRepository = Factory.GetEventRepository;
-
-			InitializeCommon();
-			EventGroupSelectedCommand = EventGroupsCCHelper.EventGroupSelectedCommand;
-			DefaultEventTimespanCCHelper.SelectedUnitIndex = 0; // minutes
-			DefaultEventTimespanCCHelper.DurationValue = 30;
+			//_eventRepository = Factory.GetEventRepository;
+			try
+			{
+				InitializeCommon();
+				EventGroupSelectedCommand = EventGroupsCCHelper.EventGroupSelectedCommand;
+				DefaultEventTimespanCCHelper.SelectedUnitIndex = 0; // minutes
+				DefaultEventTimespanCCHelper.DurationValue = 30;
+			}
+			catch (Exception ex)
+			{
+				App.Current.MainPage.DisplayAlert("Error", ex.Message, "OK");
+			}
 		}
 
 		// constructor for edit mode
@@ -147,22 +154,24 @@ namespace Kalendarzyk.ViewModels
 			AsyncDeleteSelectedEventTypeCommand = new AsyncRelayCommand(AsyncDeleteSelectedEventType);
 		}
 
-		private void InitializeCommon()
-		{
-			InitializeColorButtons();
-			EventTypesInfoButton = Factory.CreateNewChangableFontsIconAdapter(true, "info", "info_outline");
+        private void InitializeCommon()
+        {
+            EventTypesInfoButton = Factory.CreateNewChangableFontsIconAdapter(true, "info", "info_outline");
             _eventGroupsCCHelper = Factory.CreateNewIEventGroupViewModelClass(_eventService.AllEventGroupsOC);
-			bool isEditMode = CurrentType != null;
+            bool isEditMode = CurrentType != null;
 
-			AsyncSubmitTypeCommand = new AsyncRelayCommand(AsyncSubmitType, CanExecuteAsyncSubmitTypeCommand);
-			_eventGroupsCCHelper.EventGroupChanged += OnEventGroupChanged;
+            AsyncSubmitTypeCommand = new AsyncRelayCommand(AsyncSubmitType, CanExecuteAsyncSubmitTypeCommand);
+            _eventGroupsCCHelper.EventGroupChanged += OnEventGroupChanged;
+            InitializeColorButtons();
 
-		}
 
-		// for telling the view that the main event type has changed
-		private void OnEventGroupChanged(EventGroupModel newEventGroup)
+        }
+
+
+        // for telling the view that the main event type has changed
+        private void OnEventGroupChanged(EventGroupModel newEventGroup)
 		{
-			AsyncSubmitTypeCommand.NotifyCanExecuteChanged();
+			AsyncSubmitTypeCommand.RaiseCanExecuteChanged();
 		}
 		#endregion
 

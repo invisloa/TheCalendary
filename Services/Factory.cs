@@ -29,6 +29,7 @@ namespace Kalendarzyk.Services
             {
                 _eventRepository = await SQLiteRepository.CreateAsync();
             }
+            //await _eventRepository.ResetDatabaseAsync();
             return _eventRepository;
         }
 
@@ -97,6 +98,14 @@ namespace Kalendarzyk.Services
         public static IEventGroupsCCViewModel CreateNewIEventGroupViewModelClass(ObservableCollection<EventGroupModel> eventGroups)
         {
             return new EventGroupsSelectorCCViewModel(eventGroups);
+        }
+        public static MeasurementSelectorCCViewModel CreateNewMeasurementSelectorCCHelperClass()
+        {
+            return new MeasurementSelectorCCViewModel();
+        }
+        internal static MicroTasksCCAdapterVM CreateNewMicroTasksCCAdapter(IEnumerable<MicroTaskModel> listToAddMiroTasks)
+        {
+            return new MicroTasksCCAdapterVM(listToAddMiroTasks);
         }
 
     }

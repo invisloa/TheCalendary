@@ -28,8 +28,11 @@ namespace Kalendarzyk.Services.Data
         Task<OperationResult> DeleteEventTypeAsync(EventTypeModel eventTypeToDelete);
         Task<OperationResult> ClearAllEventTypesAsync();
 
+
         // File Operations
         Task<OperationResult> SaveEventsAndTypesToFile(IEnumerable<EventModel> eventsToSave = null);
         Task<OperationResult> LoadEventsAndTypesFromFile();
+        Task<OperationResult> ResetDatabaseAsync();
+
     }
 }

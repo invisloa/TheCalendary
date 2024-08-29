@@ -1,5 +1,6 @@
 ﻿using SQLite;
 using System;
+using System.Collections.Generic;
 
 namespace Kalendarzyk.Models.EventModels
 {
@@ -23,21 +24,30 @@ namespace Kalendarzyk.Models.EventModels
         public bool IsMicroTaskType { get; set; }
 
         public MeasurementUnit? MeasurementUnit { get; set; }
+        public int? DefaultValue { get; set; }
+        [Ignore]
+        public List<MicroTaskModel>? DefaultMicroTasks { get; set; }
 
         // Ignored properties (not stored directly in the database)
         [Ignore]
         public EventGroupModel EventGroup { get; set; }
 
+        [Ignore]
+        public QuantityModel? DefaultQuantity { get; set; }
+
         public EventTypeModel() { }
 
-        public EventTypeModel(int eventGroupId, string eventTypeName, string eventTypeColorString, TimeSpan defaultEventTime, MeasurementUnit? measurementUnit = null)
+        public EventTypeModel(int eventGroupId, string eventTypeName, string eventTypeColorString, TimeSpan defaultEventTime, MeasurementUnit? measurementUnit = null, int? defaultValue = null, List<MicroTaskModel>? defaultMicroTasks = null)
         {
             EventGroupId = eventGroupId;
             EventTypeName = eventTypeName;
             EventTypeColorString = eventTypeColorString;
             DefaultEventTimeSpan = defaultEventTime;
-            if (measurementUnit != null)
+            DefaultMicroTasks = defaultMicroTasks;
+            if(measurementUnit != null && defaultValue != null)
             {
+                DefaultQuantity = new QuantityModel((MeasurementUnit)measurementUnit, (int)defaultValue);
+                DefaultValue = defaultValue;
                 MeasurementUnit = measurementUnit;
                 IsValueType = true;
             }

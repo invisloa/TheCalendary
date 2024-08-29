@@ -315,6 +315,30 @@ namespace Kalendarzyk.Services.Data
             // xxx
             throw new NotImplementedException();
         }
+        public async Task<OperationResult> ResetDatabaseAsync()
+        {
+            try
+            {
+                // Get the path to the database file
+                var databasePath = Path.Combine(FileSystem.AppDataDirectory, "KalendarzykEvents.db");
+
+                // Close the connection if it's open
+                await _database.CloseAsync();
+
+                // Delete the existing database file
+                if (File.Exists(databasePath))
+                {
+                    File.Delete(databasePath);
+                }
+
+                return OperationResult.Success();
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.Failure($"Failed to reset the database: {ex.Message}");
+            }
+        }
+
     }
 
     // OperationResult class to encapsulate success or failure of operations

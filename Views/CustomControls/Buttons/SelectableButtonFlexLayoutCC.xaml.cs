@@ -2,22 +2,22 @@ using System.Collections;
 
 namespace Kalendarzyk.Views.CustomControls.Buttons
 {
-	public partial class SelectableButtonsFlexLayoutCC : FlexLayout
+	public partial class SelectableButtonFlexLayoutCC : FlexLayout
 	{
 		private static Color _mainButtonBackgroundColor;
 
-		public SelectableButtonsFlexLayoutCC()
+		public SelectableButtonFlexLayoutCC()
 		{
 			_mainButtonBackgroundColor = (Color)Application.Current.Resources["MainButtonBackgroundColor"];
 			InitializeComponent();
 		}
 
 		public static readonly BindableProperty ItemsSourceProperty =
-			BindableProperty.Create(nameof(ItemsSource), typeof(IEnumerable), typeof(SelectableButtonsFlexLayoutCC), null, propertyChanged: OnItemsSourceChanged);
+			BindableProperty.Create(nameof(ItemsSource), typeof(IEnumerable), typeof(SelectableButtonFlexLayoutCC), null, propertyChanged: OnItemsSourceChanged);
 
 
 		public static readonly BindableProperty ButtonBackgroundProperty =
-			BindableProperty.Create(nameof(ButtonBackground), typeof(Color), typeof(SelectableButtonsFlexLayoutCC), defaultValue: Colors.Black);
+			BindableProperty.Create(nameof(ButtonBackground), typeof(Color), typeof(SelectableButtonFlexLayoutCC), defaultValue: Colors.Black);
 
 		public Color ButtonBackground
 		{
@@ -33,7 +33,7 @@ namespace Kalendarzyk.Views.CustomControls.Buttons
 
 		private static void OnItemsSourceChanged(BindableObject bindable, object oldValue, object newValue)
 		{
-			if (bindable is SelectableButtonsFlexLayoutCC control && newValue is IEnumerable items)
+			if (bindable is SelectableButtonFlexLayoutCC control && newValue is IEnumerable items)
 			{
 				BindableLayout.SetItemsSource(control, items);
 			}

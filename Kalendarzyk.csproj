@@ -62,9 +62,11 @@
 
 	<ItemGroup>
 		<PackageReference Include="AsyncAwaitBestPractices" Version="8.0.0" />
-		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.2" />
-		<PackageReference Include="Microsoft.Maui.Controls" Version="$(MauiVersion)" />
-		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="$(MauiVersion)" />
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.3" />
+		<PackageReference Include="CommunityToolkit.Maui.Core" Version="9.0.3" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.3.0" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.82" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.82" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
 		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
 		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.9" />
@@ -90,13 +92,25 @@
 	  <MauiXaml Update="Views\CustomControls\Buttons\ColorButtonsSelectorCC.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Views\CustomControls\Buttons\SelectableButtonsFlexLayoutCC.xaml">
+	  <MauiXaml Update="Views\CustomControls\Buttons\SelectableButtonFlexLayoutCC.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\CustomControls\EventGroupsSelectorCC.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\CustomControls\ExtraOptionsCC\ExtraOptionsSelectorCC.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\CustomControls\ExtraOptionsCC\MeasurementSelectorCC.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\CustomControls\ExtraOptionsCC\MicroTasksListCC.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\CustomControls\OperationsBarCC.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\CustomControls\RoundEntryCC.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Views\LoadingPage.xaml">
