@@ -128,30 +128,48 @@ namespace Kalendarzyk.Services.Data
         {
             try
             {
-                // Step 1: Insert the IconModel to the database
+                // Insert the IconModel to the database
                 await _database.InsertAsync(eventGroupToAdd.SelectedVisualElement);
 
-                // Step 2: Retrieve the generated ID of the inserted IconModel
-                int iconId = eventGroupToAdd.SelectedVisualElement.Id; // The Id is set automatically after insertion
+                // Retrieve the generated ID of the inserted IconModel
+                eventGroupToAdd.SelectedVisualElementId = eventGroupToAdd.SelectedVisualElement.Id; // The Id is set automatically after insertion
+            }
+            catch (Exception ex)
+            {
+                return OperationResult.Failure($"Failed to add SelectedVisualElement: {ex.Message}");
+            }
 
-                // Step 3: Assign this ID to the EventGroupModel's SelectedVisualElementId
-                eventGroupToAdd.SelectedVisualElementId = iconId;
-
-                // Step 4: Insert the EventGroupModel into the database
+            try
+            {
+                // Insert the EventGroupModel to the database
                 await _database.InsertAsync(eventGroupToAdd);
-
-
                 return OperationResult.Success();
             }
             catch (SQLiteException ex) when (ex.Message.Contains("UNIQUE constraint failed"))
             {
+                // Handle UNIQUE constraint failure by deleting the previously added visual element
+                await SafeDeleteVisualElementAsync(eventGroupToAdd.SelectedVisualElement);
                 return OperationResult.Failure($"An event group with the name '{eventGroupToAdd.GroupName}' already exists.");
             }
             catch (Exception ex)
             {
+                // Handle other exceptions by deleting the previously added visual element
+                await SafeDeleteVisualElementAsync(eventGroupToAdd.SelectedVisualElement);
                 return OperationResult.Failure($"Failed to add event group: {ex.Message}");
             }
         }
+        private async Task SafeDeleteVisualElementAsync(IconModel visualElement)
+        {
+            try
+            {
+                await _database.DeleteAsync(visualElement);
+            }
+            catch
+            {
+                // Swallow the exception silently since there's nothing more we can do
+            }
+        }
+
 
 
         public async Task<IEnumerable<EventGroupModel>> GetEventGroupsListAsync()

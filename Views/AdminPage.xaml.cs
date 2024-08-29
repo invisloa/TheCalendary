@@ -144,14 +144,15 @@ namespace Kalendarzyk.Views
                     SelectedVisualElement = dummyIcon
                 };
 
-                // Optionally add the dummyEventGroup to the service/repository if needed
-                // await _eventsService.AddEventGroupAsync(dummyEventGroup);
-
-                // Add to local collection and persist
-                _eventsService.AllEventGroupsOC.Add(dummyEventGroup);
-                await _eventsService.AddEventGroupAsync(dummyEventGroup);
-
-                await DisplayAlert("Success", "Dummy event group added successfully.", "OK");
+                var resoult = await _eventsService.AddEventGroupAsync(dummyEventGroup);
+                if(resoult.IsSuccess)
+                {
+                    await DisplayAlert("Success", "Dummy event group added successfully.", "OK");
+                }
+                else
+                {
+                    await DisplayAlert("Error", $"Failed to add dummy event group: {resoult.ErrorMessage}", "OK");
+                }
             }
             catch (Exception ex)
             {
