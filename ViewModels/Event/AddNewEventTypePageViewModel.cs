@@ -31,7 +31,9 @@ namespace Kalendarzyk.ViewModels
 			}
 		}
 		private ObservableCollection<EventGroupViewModel> _eventGroupsOC;
-		public ObservableCollection<EventGroupViewModel> EventGroupsVisualsOC
+		public ExtraOptionsEventTypesHelperClass ExtraOptionsHelperToChangeName { get; set; } = Factory.CreateNewExtraOptionsEventTypesHelperClass();
+
+        public ObservableCollection<EventGroupViewModel> EventGroupsVisualsOC
         {
             get => _eventGroupsOC;
             set

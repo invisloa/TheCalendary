@@ -107,6 +107,7 @@ namespace Kalendarzyk.Services
         {
             return new MicroTasksCCAdapterVM(listToAddMiroTasks);
         }
+        internal static ExtraOptionsEventTypesHelperClass CreateNewExtraOptionsEventTypesHelperClass() => new ExtraOptionsEventTypesHelperClass();
 
     }
 }

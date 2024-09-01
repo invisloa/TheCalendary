@@ -19,8 +19,13 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 	// TODO HERE 27.03.24 WHEN SWITCHING SUB TYPE IN EVENTS ADDING THE CONTROLS cONTROLS ARE NOT REFRESHED Accordingly
 	public partial class ExtraOptionsEventsHelperClass :  ExtraOptionsBaseClass
 	{
-		[ObservableProperty]
 		private bool _isDateBtnSelected;
+
+		public bool IsDateBtnSelected
+        {
+            get => _isDateBtnSelected;
+            set => SetProperty(ref _isDateBtnSelected, value);
+        }
 		//ctor create mode
 		public ExtraOptionsEventsHelperClass()
 		{
