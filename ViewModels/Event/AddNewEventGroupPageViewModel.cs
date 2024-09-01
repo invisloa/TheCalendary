@@ -97,7 +97,6 @@ namespace Kalendarzyk.ViewModels.Event
         }
 
         public ObservableCollection<string> IconsToShowStringsOC { get; set; }
-        //public RelayCommand GoToAllMainTypesPageCommand { get; set; }
         public RelayCommand<string> ExactIconSelectedCommand { get; set; }
         public AsyncRelayCommand AsyncSubmitGroupCommand { get; set; }
         public AsyncRelayCommand DeleteAsyncSelectedEventGroupCommand { get; set; }
@@ -164,10 +163,7 @@ namespace Kalendarzyk.ViewModels.Event
             AsyncSubmitGroupCommand = new AsyncRelayCommand(OnSubmitGroupCommand, CanExecuteSubmitGroupCommand);
             ExactIconSelectedCommand = new RelayCommand<string>(OnExactIconSelectedCommand);
         }
-
-
-        // TODO extract to separate class and make ctor in so that takes 2 params : 1. string name, 2. method for relaycommand
-        private void InitializeSelectors()      // TODO CHANGE THIS TO DYNAMIC LIST !!!!!
+        private void InitializeSelectors()
         {
             SelectedVisualElementString = IconFont.Accessibility;
             MainButtonVisualsSelectors = new ObservableCollection<SelectableButtonViewModel>
@@ -210,10 +206,6 @@ namespace Kalendarzyk.ViewModels.Event
                 }
             }
         }
-
-
-
-
         private async Task OnDeleteMainTypeCommand()
         {
             var eventTypesInDb = _eventsService.AllEventTypesOC.Where(x => x.EventGroupId == _currentGroup.Id);
@@ -223,18 +215,13 @@ namespace Kalendarzyk.ViewModels.Event
                 switch (action)
                 {
                     case "Delete all associated data":
-                        // Perform the operation to delete all events of the event type.
                         await DeleteEventGroup();
                         await Shell.Current.GoToAsync("..");
-
-                        // TODO make a confirmation message
                         break;
                     case "Go to All EventTypes Page":
-                        // Redirect to the All Events Page.
                         await Shell.Current.GoToAsync("AllEventTypesPage");   // TODO SELECT PROPPER MAINEVENTTYPE FOR THE PAGE
                         break;
                     default:
-                        // Cancel was selected or back button was pressed.
                         break;
                 }
                 return;

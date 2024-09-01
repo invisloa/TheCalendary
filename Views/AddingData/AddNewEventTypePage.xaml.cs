@@ -28,11 +28,7 @@ public partial class AddNewEventTypePage : ContentPage
     {
         base.OnAppearing();
         vm.EventGroupsCCHelper.RefreshGroups();
-        vm.EventGroupsVisualsOC = vm.EventGroupsCCHelper.EventGroupsVisualsOC;
     }
 
-    private void Button_Clicked(object sender, EventArgs e)
-    {
-        vm.EventGroupsVisualsOC.Remove(vm.EventGroupsVisualsOC.Last());
-    }
+
 }
