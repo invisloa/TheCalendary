@@ -109,7 +109,7 @@ namespace Kalendarzyk.Services
         {
             return new ChangableFontsIconCCViewModel(isSelected, selectedIconText, notSelectedIconText);
         }
-        public static IEventGroupsSelectorCCViewModel CreateNewIEventGroupViewModelClass(ObservableCollection<EventGroupModel> eventGroups)
+        public static IEventGroupsCCViewModel CreateNewIEventGroupViewModelClass(ObservableCollection<EventGroupModel> eventGroups)
         {
             return new EventGroupsSelectorCCViewModel(eventGroups, GetMediator);
         }
@@ -122,6 +122,11 @@ namespace Kalendarzyk.Services
             return new MicroTasksCCAdapterVM(listToAddMiroTasks);
         }
         internal static ExtraOptionsEventTypesHelperClass CreateNewExtraOptionsEventTypesHelperClass() => new ExtraOptionsEventTypesHelperClass();
+        public static EventTypeModel CreateNewEventType(EventGroupModel EventGroup, string eventTypeName, string eventTypeColorString, TimeSpan defaultEventTime, QuantityModel quantity = null, List<MicroTaskModel> microTasksList = null)
+        {
+            var eventTypeModel = new EventTypeModel(EventGroup, eventTypeName, eventTypeColorString, defaultEventTime, quantity, microTasksList);
 
+            return eventTypeModel;
+        }
     }
 }

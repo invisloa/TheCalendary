@@ -34,7 +34,7 @@
 
             
             <!-- Event Group selector -->
-            <customControlsButtons:SelectableButtonFlexLayoutCC ItemsSource="{Binding EventGroupsCCHelper.AllEventGroupsOC}" AlignItems="Center" JustifyContent="Center" />
+            <customControls:EventGroupsSelectorCC BindingContext="{Binding Source={x:Reference AddNewEventTypePageName}, Path=BindingContext}"/>
 
 
 

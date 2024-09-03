@@ -97,7 +97,7 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
             if (EventType.DefaultMicroTasks != null && EventType.DefaultMicroTasks.Any())
             {
                 OnIsMicroTasksSelected(ExtraOptionsButtonsSelectors[0]);
-                MicroTasksCCAdapter.MicroTasksOC = EventType.DefaultMicroTasks.ToObservableCollection();
+                MicroTasksCCAdapter.MicroTasksOC = EventType.DefaultMicroTasks;
             }
         }
 

@@ -23,8 +23,30 @@ namespace Kalendarzyk.Models.EventModels
 
         public bool IsMicroTaskType { get; set; }
 
-        public MeasurementUnit? MeasurementUnit { get; set; }
-        public int? DefaultValue { get; set; }
+        public MeasurementUnit? MeasurementUnit { get => DefaultQuantity.Unit; DefaultQuantity jest null
+            set
+            {
+                if (DefaultQuantity != null)
+                {
+                    if (value != null)
+                    {
+                        DefaultQuantity.Unit = (MeasurementUnit)value;
+                    }
+                }
+            }
+        }
+        public decimal? DefaultValue { get => DefaultQuantity.Value; 
+            set
+            {
+                if (DefaultQuantity != null)
+                {
+                    if (value != null)
+                    {
+                        DefaultQuantity.Value = (decimal)value;
+                    }
+                }
+            }
+        }
         [Ignore]
         public List<MicroTaskModel>? DefaultMicroTasks { get; set; }
 
@@ -37,18 +59,17 @@ namespace Kalendarzyk.Models.EventModels
 
         public EventTypeModel() { }
 
-        public EventTypeModel(int eventGroupId, string eventTypeName, string eventTypeColorString, TimeSpan defaultEventTime, MeasurementUnit? measurementUnit = null, int? defaultValue = null, List<MicroTaskModel>? defaultMicroTasks = null)
+        public EventTypeModel(EventGroupModel eventGroup, string eventTypeName, string eventTypeColorString, TimeSpan defaultEventTime, QuantityModel? quantity, List<MicroTaskModel>? defaultMicroTasks = null)
         {
-            EventGroupId = eventGroupId;
+            EventGroup = eventGroup;
+            EventGroupId = eventGroup.Id;
             EventTypeName = eventTypeName;
             EventTypeColorString = eventTypeColorString;
             DefaultEventTimeSpan = defaultEventTime;
             DefaultMicroTasks = defaultMicroTasks;
-            if(measurementUnit != null && defaultValue != null)
+            if(quantity != null)
             {
-                DefaultQuantity = new QuantityModel((MeasurementUnit)measurementUnit, (int)defaultValue);
-                DefaultValue = defaultValue;
-                MeasurementUnit = measurementUnit;
+                DefaultQuantity = quantity;
                 IsValueType = true;
             }
         }

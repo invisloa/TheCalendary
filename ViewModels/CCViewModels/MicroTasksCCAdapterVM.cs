@@ -46,7 +46,7 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 		public MicroTasksCCAdapterVM(IEnumerable<MicroTaskModel> listToAddMicroTasks)
 		{
 			InitializeCommon();
-			MicroTasksOC = new ObservableCollection<MicroTaskModel>(listToAddMicroTasks);
+			MicroTasksOC = new List<MicroTaskModel>(listToAddMicroTasks);
 			AddMicroTaskEventCommand = new RelayCommand(AddMicroTaskEvent, CanAddMicroTaskEvent);
 		}
 		public RelayCommand ToggleDeleteModeCommand { get; set; }
@@ -111,8 +111,8 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 				_allMicroTasksCompleted = value;
 			}
 		}
-		private ObservableCollection<MicroTaskModel> _microTasksOC;
-		public ObservableCollection<MicroTaskModel> MicroTasksOC
+		private List<MicroTaskModel> _microTasksOC;
+		public List<MicroTaskModel> MicroTasksOC
 		{
 			get => _microTasksOC;
 			set

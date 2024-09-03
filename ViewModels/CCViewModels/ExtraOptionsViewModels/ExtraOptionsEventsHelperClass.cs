@@ -62,7 +62,7 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 				if (EventType.DefaultMicroTasks != null && EventType.DefaultMicroTasks.Count() > 0)
 				{
 					OnIsMicroTasksSelected(ExtraOptionsButtonsSelectors[0]); // TODO refactor this
-					MicroTasksCCAdapter.MicroTasksOC = EventType.DefaultMicroTasks.ToObservableCollection();
+					MicroTasksCCAdapter.MicroTasksOC = EventType.DefaultMicroTasks;
 
 				}
 			}
@@ -109,7 +109,7 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 				}
 				else
 				{
-					MicroTasksCCAdapter.MicroTasksOC = selectedEventType.DefaultMicroTasks.ToObservableCollection();
+					MicroTasksCCAdapter.MicroTasksOC = selectedEventType.DefaultMicroTasks;
 				}
 			}
 

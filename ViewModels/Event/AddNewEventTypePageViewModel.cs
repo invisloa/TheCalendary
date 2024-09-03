@@ -18,11 +18,45 @@ namespace Kalendarzyk.ViewModels
 {
     public class AddNewEventTypePageViewModel : BaseViewModel
     {
+        public ObservableCollection<EventGroupViewModel> EventGroupsVisualsOC { get => _eventGroupsCCHelper.EventGroupsVisualsOC; set => _eventGroupsCCHelper.EventGroupsVisualsOC = value; }
+        public RelayCommand<EventGroupViewModel> EventGroupSelectedCommand { get; set; } 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         #region Fields
 
         private IEventsService _eventService = Factory.GetEventService;
         private ChangableFontsIconCCViewModel _eventTypesInfoButton;
-        private IEventGroupsSelectorCCViewModel _eventGroupsCCHelper;
+        private IEventGroupsCCViewModel _eventGroupsCCHelper;
         private EventTypeModel _currentType; // if null => add new type, else => edit type
         private string _typeName;
         private IEventRepository _eventRepository;
@@ -55,7 +89,7 @@ namespace Kalendarzyk.ViewModels
         public bool IsEdit => _currentType != null;
         public bool IsNotEdit => !IsEdit;
 
-        public IEventGroupsSelectorCCViewModel EventGroupsCCHelper
+        public IEventGroupsCCViewModel EventGroupsCCHelper
         {
             get => _eventGroupsCCHelper;
             set
@@ -84,23 +118,11 @@ namespace Kalendarzyk.ViewModels
                 if (value == _typeName) return;
                 _typeName = value;
                 AsyncSubmitTypeCommand.RaiseCanExecuteChanged();
-                SetCanSubmitTypeCommand();
                 OnPropertyChanged();
             }
         }
 
         public ObservableCollection<SelectableButtonViewModel> ButtonsColorsOC { get; set; }
-
-        public bool CanSubmitTypeCommand
-        {
-            get => _canSubmitTypeCommand;
-            set
-            {
-                _canSubmitTypeCommand = value;
-                OnPropertyChanged();
-            }
-        }
-
         #endregion
 
         #region Commands
@@ -131,7 +153,6 @@ namespace Kalendarzyk.ViewModels
         // Constructor for edit mode
         public AddNewEventTypePageViewModel(EventTypeModel currentType)
         {
-            _eventRepository = Factory.GetEventRepository;
             CurrentType = currentType;
             InitializeCommon();
             ColorButtonsHelperClass.SelectedColor = Color.FromArgb(currentType.EventTypeColorString);
@@ -146,11 +167,14 @@ namespace Kalendarzyk.ViewModels
 
         private void InitializeCommon()
         {
+            _eventRepository = Factory.GetEventRepository;
+
             EventTypesInfoButton = Factory.CreateNewChangableFontsIconAdapter(true, "info", "info_outline");
             EventGroupsCCHelper = Factory.CreateNewIEventGroupViewModelClass(_eventService.AllEventGroupsOC);
             bool isEditMode = CurrentType != null;
-
+            EventGroupSelectedCommand = EventGroupsCCHelper.EventGroupSelectedCommand;
             AsyncSubmitTypeCommand = new AsyncRelayCommand(AsyncSubmitType, CanExecuteAsyncSubmitTypeCommand);
+
             InitializeColorButtons();
         }
 
@@ -185,12 +209,27 @@ namespace Kalendarzyk.ViewModels
         {
             if (IsEdit)
             {
-                _currentType.EventGroup = EventGroupsCCHelper.SelectedEventGroup.EventGroup;
-                _currentType.EventTypeName = TypeName;
-                _currentType.EventTypeColorString = ColorButtonsHelperClass.SelectedColor.ToArgbHex();
 
-                await _eventService.UpdateEventTypeAsync(_currentType);
-                await Shell.Current.GoToAsync(".."); // TODO CHANGE NOT WORKING!!!
+                    _currentType.EventGroup = EventGroupsCCHelper.SelectedEventGroup;
+                    _currentType.EventTypeName = TypeName;
+                    _currentType.EventTypeColorString = ColorButtonsHelperClass.SelectedColor.ToArgbHex();
+                    if (ExtraOptionsHelperToChangeName.DefaultMeasurementSelectorCCHelper.IsValueTypeSelected)
+                        _currentType.DefaultQuantity = ExtraOptionsHelperToChangeName.DefaultMeasurementSelectorCCHelper.QuantityAmount;
+                    _currentType.DefaultMicroTasks = ExtraOptionsHelperToChangeName.MicroTasksCCAdapter.MicroTasksOC;
+
+                    await _eventRepository.UpdateEventTypeAsync(_currentType);
+                    await Shell.Current.GoToAsync("..");    // TODO CHANGE NOT WORKING!!!
+
+            }
+            else
+            {
+
+                    //var timespan = EventTypeExtraOptionsHelper.IsDefaultEventTimespanSelected ? DefaultEventTimespanCCHelper.GetDuration() : TimeSpan.Zero;
+                    var quantityAmount = ExtraOptionsHelperToChangeName.DefaultMeasurementSelectorCCHelper.IsValueTypeSelected ? ExtraOptionsHelperToChangeName.DefaultMeasurementSelectorCCHelper.QuantityAmount : null;
+                    var microTasks = ExtraOptionsHelperToChangeName.IsMicroTasksType ? new List<MicroTaskModel>(ExtraOptionsHelperToChangeName.MicroTasksCCAdapter.MicroTasksOC) : null;
+                    var newEventType = Factory.CreateNewEventType(EventGroupsCCHelper.SelectedEventGroup, TypeName, ColorButtonsHelperClass.SelectedColor.ToArgbHex(), TimeSpan.FromHours(1), quantityAmount, microTasks);
+                    await _eventRepository.AddEventTypeAsync(newEventType);
+                    TypeName = string.Empty;
             }
         }
 
@@ -205,11 +244,6 @@ namespace Kalendarzyk.ViewModels
             {
                 return;
             }
-        }
-
-        private void SetCanSubmitTypeCommand()
-        {
-            CanSubmitTypeCommand = !string.IsNullOrEmpty(TypeName) && _isEventGroupSelected;
         }
 
         #endregion

@@ -7,7 +7,7 @@ namespace Kalendarzyk.Views.CustomControls.CCInterfaces.EventTypeExtraOptions
 	{
 		string MicroTaskToAddName { get; set; }
 		RelayCommand AddMicroTaskEventCommand { get; set; }
-		ObservableCollection<MicroTaskModel> MicroTasksOC { get; set; }
+		List<MicroTaskModel> MicroTasksOC { get; set; }
 		RelayCommand<MicroTaskModel> SelectMicroTaskCommand { get; set; }
 	}
 }
