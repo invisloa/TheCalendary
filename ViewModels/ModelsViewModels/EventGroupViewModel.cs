@@ -8,10 +8,10 @@ namespace Kalendarzyk.ViewModels.ModelsViewModels
         private EventGroupModel _eventGroupModel;
         private bool _isSelected;
 
-
-
         public EventGroupModel EventGroup
-        { get => _eventGroupModel; }
+        {
+            get => _eventGroupModel;
+        }
 
         public EventGroupViewModel(EventGroupModel eventGroupModel)
         {
@@ -30,6 +30,7 @@ namespace Kalendarzyk.ViewModels.ModelsViewModels
                 }
             }
         }
+
         public bool IsSelected
         {
             get => _isSelected;
@@ -42,6 +43,7 @@ namespace Kalendarzyk.ViewModels.ModelsViewModels
                 }
             }
         }
+
         public string EventGroupName
         {
             get => _eventGroupModel.GroupName;
@@ -80,6 +82,17 @@ namespace Kalendarzyk.ViewModels.ModelsViewModels
                 }
             }
         }
+
+        // Implementing UpdateFromModel method
+        public void UpdateFromModel(EventGroupModel updatedModel)
+        {
+            _eventGroupModel = updatedModel;
+            OnPropertyChanged(nameof(Id));
+            OnPropertyChanged(nameof(EventGroupName));
+            OnPropertyChanged(nameof(IconModelId));
+            OnPropertyChanged(nameof(SelectedVisualElement));
+        }
+
         public override bool Equals(object obj)
         {
             if (obj == null || GetType() != obj.GetType())

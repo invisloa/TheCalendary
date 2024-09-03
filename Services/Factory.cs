@@ -1,5 +1,7 @@
-﻿using Kalendarzyk.Models.EventModels;
+﻿using Kalendarzyk.Mediator;
+using Kalendarzyk.Models.EventModels;
 using Kalendarzyk.Services.Data;
+using Kalendarzyk.ViewModels.CCViewModels;
 using Kalendarzyk.ViewModels.CustomControls;
 using Kalendarzyk.ViewModels.CustomControls.Buttons;
 using Kalendarzyk.ViewModels.ModelsViewModels;
@@ -20,8 +22,20 @@ namespace Kalendarzyk.Services
     {
         // Event Repository Singleton Pattern
         private static IEventRepository _eventRepository;
+        private static IMediator _mediator;
 
         public static IEventRepository GetEventRepository => _eventRepository;
+        public static IMediator GetMediator
+        {
+            get
+            {
+                if (_mediator == null)
+                {
+                    _mediator = new EventMediator();
+                }
+                return _mediator;
+            }
+        }
 
         public static async Task<IEventRepository> InitializeEventRepository()
         {
@@ -40,7 +54,7 @@ namespace Kalendarzyk.Services
             if (_eventsService == null)
             {
                 var repository = await InitializeEventRepository();
-                _eventsService = new EventsService(repository);
+                _eventsService = new EventsService(repository, GetMediator);
                 await _eventsService.InitializeDataAsync();
             }
             return _eventsService;
@@ -95,9 +109,9 @@ namespace Kalendarzyk.Services
         {
             return new ChangableFontsIconCCViewModel(isSelected, selectedIconText, notSelectedIconText);
         }
-        public static IEventGroupsCCViewModel CreateNewIEventGroupViewModelClass(ObservableCollection<EventGroupModel> eventGroups)
+        public static IEventGroupsSelectorCCViewModel CreateNewIEventGroupViewModelClass(ObservableCollection<EventGroupModel> eventGroups)
         {
-            return new EventGroupsSelectorCCViewModel(eventGroups);
+            return new EventGroupsSelectorCCViewModel(eventGroups, GetMediator);
         }
         public static MeasurementSelectorCCViewModel CreateNewMeasurementSelectorCCHelperClass()
         {

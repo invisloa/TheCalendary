@@ -27,7 +27,6 @@ public partial class AddNewEventTypePage : ContentPage
     protected override void OnAppearing()
     {
         base.OnAppearing();
-        vm.EventGroupsCCHelper.RefreshGroups();
     }
 
 

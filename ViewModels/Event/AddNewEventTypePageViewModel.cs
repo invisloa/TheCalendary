@@ -5,6 +5,7 @@ using Kalendarzyk.Helpers;
 using Kalendarzyk.Models.EventModels;
 using Kalendarzyk.Services;
 using Kalendarzyk.Services.Data;
+using Kalendarzyk.ViewModels.CCViewModels;
 using Kalendarzyk.ViewModels.CustomControls;
 using Kalendarzyk.ViewModels.CustomControls.Buttons;
 using Kalendarzyk.ViewModels.ModelsViewModels;
@@ -21,7 +22,7 @@ namespace Kalendarzyk.ViewModels
 
         private IEventsService _eventService = Factory.GetEventService;
         private ChangableFontsIconCCViewModel _eventTypesInfoButton;
-        private IEventGroupsCCViewModel _eventGroupsCCHelper;
+        private IEventGroupsSelectorCCViewModel _eventGroupsCCHelper;
         private EventTypeModel _currentType; // if null => add new type, else => edit type
         private string _typeName;
         private IEventRepository _eventRepository;
@@ -54,7 +55,7 @@ namespace Kalendarzyk.ViewModels
         public bool IsEdit => _currentType != null;
         public bool IsNotEdit => !IsEdit;
 
-        public IEventGroupsCCViewModel EventGroupsCCHelper
+        public IEventGroupsSelectorCCViewModel EventGroupsCCHelper
         {
             get => _eventGroupsCCHelper;
             set
@@ -133,12 +134,9 @@ namespace Kalendarzyk.ViewModels
             _eventRepository = Factory.GetEventRepository;
             CurrentType = currentType;
             InitializeCommon();
-
-            OnEventGroupSelectedCommand(new EventGroupViewModel(currentType.EventGroup));
             ColorButtonsHelperClass.SelectedColor = Color.FromArgb(currentType.EventTypeColorString);
             TypeName = currentType.EventTypeName;
             DefaultEventTimespanCCHelper.SetControlsValues(currentType.DefaultEventTimeSpan);
-
             AsyncDeleteSelectedEventTypeCommand = new AsyncRelayCommand(AsyncDeleteSelectedEventType);
         }
 
@@ -149,11 +147,10 @@ namespace Kalendarzyk.ViewModels
         private void InitializeCommon()
         {
             EventTypesInfoButton = Factory.CreateNewChangableFontsIconAdapter(true, "info", "info_outline");
-            _eventGroupsCCHelper = Factory.CreateNewIEventGroupViewModelClass(_eventService.AllEventGroupsOC);
+            EventGroupsCCHelper = Factory.CreateNewIEventGroupViewModelClass(_eventService.AllEventGroupsOC);
             bool isEditMode = CurrentType != null;
 
             AsyncSubmitTypeCommand = new AsyncRelayCommand(AsyncSubmitType, CanExecuteAsyncSubmitTypeCommand);
-            _eventGroupsCCHelper.EventGroupChanged += OnEventGroupChanged;
             InitializeColorButtons();
         }
 
@@ -188,7 +185,7 @@ namespace Kalendarzyk.ViewModels
         {
             if (IsEdit)
             {
-                _currentType.EventGroup = SelectedEventGroup;
+                _currentType.EventGroup = EventGroupsCCHelper.SelectedEventGroup.EventGroup;
                 _currentType.EventTypeName = TypeName;
                 _currentType.EventTypeColorString = ColorButtonsHelperClass.SelectedColor.ToArgbHex();
 
@@ -208,13 +205,6 @@ namespace Kalendarzyk.ViewModels
             {
                 return;
             }
-        }
-
-        private void OnEventGroupSelectedCommand(EventGroupViewModel eventGroupViewModel)
-        {
-            _isEventGroupSelected = true;
-            EventGroupsCCHelper.EventGroupSelectedCommand.Execute(eventGroupViewModel);
-            SetCanSubmitTypeCommand();
         }
 
         private void SetCanSubmitTypeCommand()

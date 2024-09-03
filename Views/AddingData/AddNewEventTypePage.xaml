@@ -4,9 +4,6 @@
              xmlns:customControls="clr-namespace:Kalendarzyk.Views.CustomControls"
              xmlns:customControlsButtons="clr-namespace:Kalendarzyk.Views.CustomControls.Buttons"
              xmlns:customControlsExtraOption="clr-namespace:Kalendarzyk.Views.CustomControls.ExtraOptionsCC"
-             
-             
-             xmlns:customControlsButtons="clr-namespace:Kalendarzyk.Views.CustomControls.Buttons"
              Title="AddNewEventTypePage"
              x:Name="AddNewEventTypePageName">
     <ScrollView BackgroundColor="{DynamicResource MainBackgroundColor}">
@@ -37,7 +34,7 @@
 
             
             <!-- Event Group selector -->
-            <customControlsButtons:SelectableButtonFlexLayoutCC ItemsSource="{Binding EventGroupsOC}" AlignItems="Center" JustifyContent="Center" />
+            <customControlsButtons:SelectableButtonFlexLayoutCC ItemsSource="{Binding EventGroupsCCHelper.AllEventGroupsOC}" AlignItems="Center" JustifyContent="Center" />
 
 
 
