@@ -13,7 +13,7 @@
     </ContentView.Resources>
 
     <VerticalStackLayout>
-        <FlexLayout BindableLayout.ItemsSource="{Binding EventGroupsVisualsOC}" 
+        <FlexLayout BindableLayout.ItemsSource="{Binding EventGroupsCCHelper.EventGroupsVisualsOC}" 
                 Direction="Row" 
                 Wrap="Wrap" 
                 AlignItems="Start"
@@ -34,7 +34,7 @@
                                >
 
                                 <Frame.GestureRecognizers>
-                                    <TapGestureRecognizer Command="{Binding BindingContext.EventGroupSelectedCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
+                                    <TapGestureRecognizer Command="{Binding BindingContext.EventGroupsCCHelper.EventGroupSelectedCommand, Source={RelativeSource AncestorType={x:Type ContentPage}}}"
                                                      CommandParameter="{Binding .}"/>
                                 </Frame.GestureRecognizers>
                                 <Label 

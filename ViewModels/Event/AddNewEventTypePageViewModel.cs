@@ -18,40 +18,6 @@ namespace Kalendarzyk.ViewModels
 {
     public class AddNewEventTypePageViewModel : BaseViewModel
     {
-        public ObservableCollection<EventGroupViewModel> EventGroupsVisualsOC { get => _eventGroupsCCHelper.EventGroupsVisualsOC; set => _eventGroupsCCHelper.EventGroupsVisualsOC = value; }
-        public RelayCommand<EventGroupViewModel> EventGroupSelectedCommand { get; set; } 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
         #region Fields
 
         private IEventsService _eventService = Factory.GetEventService;
@@ -63,7 +29,6 @@ namespace Kalendarzyk.ViewModels
         private IColorButtonsSelectorHelperClass _colorButtonsHelperClass = Factory.CreateNewIColorButtonsHelperClass(startingColor: Colors.Red);
         private bool _canSubmitTypeCommand;
         private bool _isEventGroupSelected;
-
         #endregion
 
         #region Properties
@@ -172,7 +137,6 @@ namespace Kalendarzyk.ViewModels
             EventTypesInfoButton = Factory.CreateNewChangableFontsIconAdapter(true, "info", "info_outline");
             EventGroupsCCHelper = Factory.CreateNewIEventGroupViewModelClass(_eventService.AllEventGroupsOC);
             bool isEditMode = CurrentType != null;
-            EventGroupSelectedCommand = EventGroupsCCHelper.EventGroupSelectedCommand;
             AsyncSubmitTypeCommand = new AsyncRelayCommand(AsyncSubmitType, CanExecuteAsyncSubmitTypeCommand);
 
             InitializeColorButtons();
@@ -209,7 +173,6 @@ namespace Kalendarzyk.ViewModels
         {
             if (IsEdit)
             {
-
                     _currentType.EventGroup = EventGroupsCCHelper.SelectedEventGroup;
                     _currentType.EventTypeName = TypeName;
                     _currentType.EventTypeColorString = ColorButtonsHelperClass.SelectedColor.ToArgbHex();
@@ -219,11 +182,9 @@ namespace Kalendarzyk.ViewModels
 
                     await _eventRepository.UpdateEventTypeAsync(_currentType);
                     await Shell.Current.GoToAsync("..");    // TODO CHANGE NOT WORKING!!!
-
             }
             else
             {
-
                     //var timespan = EventTypeExtraOptionsHelper.IsDefaultEventTimespanSelected ? DefaultEventTimespanCCHelper.GetDuration() : TimeSpan.Zero;
                     var quantityAmount = ExtraOptionsHelperToChangeName.DefaultMeasurementSelectorCCHelper.IsValueTypeSelected ? ExtraOptionsHelperToChangeName.DefaultMeasurementSelectorCCHelper.QuantityAmount : null;
                     var microTasks = ExtraOptionsHelperToChangeName.IsMicroTasksType ? new List<MicroTaskModel>(ExtraOptionsHelperToChangeName.MicroTasksCCAdapter.MicroTasksOC) : null;
@@ -247,11 +208,8 @@ namespace Kalendarzyk.ViewModels
         }
 
         #endregion
-
         #region Command CanExecute Methods
-
         public bool CanExecuteAsyncSubmitTypeCommand() => !string.IsNullOrEmpty(TypeName) && EventGroupsCCHelper.SelectedEventGroup != null;
-
         #endregion
     }
 }

@@ -29,7 +29,6 @@ namespace Kalendarzyk.ViewModels.CCViewModels
 
         // Properties
         public ObservableCollection<EventGroupViewModel> EventGroupsVisualsOC { get; set; }
-        public ObservableCollection<EventGroupViewModel> AllEventGroupsOC { get; set; }
 
         public EventGroupModel SelectedEventGroup
         {
@@ -96,7 +95,6 @@ namespace Kalendarzyk.ViewModels.CCViewModels
             _eventGroupsList = eventGroupModels;
             _eventVisualDetails = new Dictionary<EventGroupModel, EventGroupViewModel>();
 
-            AllEventGroupsOC = new ObservableCollection<EventGroupViewModel>(eventGroupModels.Select(x => new EventGroupViewModel(x)));
             InitializeEventGroupsVisuals();
 
             EventGroupSelectedCommand = new RelayCommand<EventGroupViewModel>(SetEventGroupFromViewModel);
@@ -146,7 +144,7 @@ namespace Kalendarzyk.ViewModels.CCViewModels
 
         private void OnSelectEventGroupCommand(EventGroupViewModel eventGroup)
         {
-            AllEventGroupsOC.ToList().ForEach(x => x.IsSelected = false); // Deselect all
+            EventGroupsVisualsOC.ToList().ForEach(x => x.IsSelected = false); // Deselect all
             eventGroup.IsSelected = true;
             SelectedEventGroupViewModel = eventGroup;
         }
@@ -156,8 +154,8 @@ namespace Kalendarzyk.ViewModels.CCViewModels
             if (args is EventGroupModel newGroup)
             {
                 var newViewModel = new EventGroupViewModel(newGroup);
-                AllEventGroupsOC.Add(newViewModel);
-                OnPropertyChanged(nameof(AllEventGroupsOC));
+                EventGroupsVisualsOC.Add(newViewModel);
+                OnPropertyChanged(nameof(EventGroupsVisualsOC));
             }
         }
 
@@ -165,11 +163,11 @@ namespace Kalendarzyk.ViewModels.CCViewModels
         {
             if (args is EventGroupModel updatedGroup)
             {
-                var existingViewModel = AllEventGroupsOC.FirstOrDefault(vm => vm.Id == updatedGroup.Id);
+                var existingViewModel = EventGroupsVisualsOC.FirstOrDefault(vm => vm.Id == updatedGroup.Id);
                 if (existingViewModel != null)
                 {
                     existingViewModel.UpdateFromModel(updatedGroup);
-                    OnPropertyChanged(nameof(AllEventGroupsOC));
+                    OnPropertyChanged(nameof(EventGroupsVisualsOC));
                 }
             }
         }
@@ -178,11 +176,11 @@ namespace Kalendarzyk.ViewModels.CCViewModels
         {
             if (args is EventGroupModel removedGroup)
             {
-                var existingViewModel = AllEventGroupsOC.FirstOrDefault(vm => vm.Id == removedGroup.Id);
+                var existingViewModel = EventGroupsVisualsOC.FirstOrDefault(vm => vm.Id == removedGroup.Id);
                 if (existingViewModel != null)
                 {
-                    AllEventGroupsOC.Remove(existingViewModel);
-                    OnPropertyChanged(nameof(AllEventGroupsOC));
+                    EventGroupsVisualsOC.Remove(existingViewModel);
+                    OnPropertyChanged(nameof(EventGroupsVisualsOC));
                 }
             }
         }

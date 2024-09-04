@@ -23,7 +23,9 @@ namespace Kalendarzyk.Models.EventModels
 
         public bool IsMicroTaskType { get; set; }
 
-        public MeasurementUnit? MeasurementUnit { get => DefaultQuantity.Unit; DefaultQuantity jest null
+        public MeasurementUnit? MeasurementUnit 
+        {
+            get => DefaultQuantity?.Unit; // Return null if DefaultQuantity is null
             set
             {
                 if (DefaultQuantity != null)
@@ -35,7 +37,8 @@ namespace Kalendarzyk.Models.EventModels
                 }
             }
         }
-        public decimal? DefaultValue { get => DefaultQuantity.Value; 
+        public decimal? DefaultValue { 
+            get => DefaultQuantity?.Value; 
             set
             {
                 if (DefaultQuantity != null)
