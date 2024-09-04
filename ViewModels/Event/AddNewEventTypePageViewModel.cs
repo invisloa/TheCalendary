@@ -32,7 +32,15 @@ namespace Kalendarzyk.ViewModels
         #endregion
 
         #region Properties
-
+        public bool CanSubmitTypeCommand
+            {
+            get => _canSubmitTypeCommand;
+            set
+            {
+                _canSubmitTypeCommand = value;
+                OnPropertyChanged();
+            }
+        }
         public ChangableFontsIconCCViewModel EventTypesInfoButton
         {
             get => _eventTypesInfoButton;
@@ -42,18 +50,15 @@ namespace Kalendarzyk.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public ExtraOptionsEventTypesHelperClass ExtraOptionsHelperToChangeName { get; set; } = Factory.CreateNewExtraOptionsEventTypesHelperClass();
         public DefaultTimespanCCViewModel DefaultEventTimespanCCHelper { get; set; } = Factory.CreateNewDefaultEventTimespanCCHelperClass();
         public IColorButtonsSelectorHelperClass ColorButtonsHelperClass => _colorButtonsHelperClass;
-
         public string QuantityValueText => IsEdit ? "DEFAULT VALUE:" : "Value:";
         public string PageTitle => IsEdit ? "EDIT TYPE" : "ADD NEW TYPE";
         public string PlaceholderText => IsEdit ? $"TYPE NEW NAME FOR: {TypeName}" : "...NEW TYPE NAME...";
         public string SubmitButtonText => IsEdit ? "SUBMIT CHANGES" : "ADD NEW TYPE";
         public bool IsEdit => _currentType != null;
         public bool IsNotEdit => !IsEdit;
-
         public IEventGroupsCCViewModel EventGroupsCCHelper
         {
             get => _eventGroupsCCHelper;
@@ -63,7 +68,6 @@ namespace Kalendarzyk.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public EventTypeModel CurrentType
         {
             get => _currentType;
@@ -74,7 +78,6 @@ namespace Kalendarzyk.ViewModels
                 OnPropertyChanged();
             }
         }
-
         public string TypeName
         {
             get => _typeName;
@@ -83,15 +86,17 @@ namespace Kalendarzyk.ViewModels
                 if (value == _typeName) return;
                 _typeName = value;
                 AsyncSubmitTypeCommand.RaiseCanExecuteChanged();
+                if(String.IsNullOrEmpty(value))
+                {
+                    CanSubmitTypeCommand = false;
+                }
                 OnPropertyChanged();
             }
         }
-
         public ObservableCollection<SelectableButtonViewModel> ButtonsColorsOC { get; set; }
         #endregion
 
         #region Commands
-
         public RelayCommand<SelectableButtonViewModel> SelectColorCommand { get; private set; }
         public AsyncRelayCommand AsyncSubmitTypeCommand { get; private set; }
         public AsyncRelayCommand AsyncDeleteSelectedEventTypeCommand { get; private set; }
@@ -145,6 +150,7 @@ namespace Kalendarzyk.ViewModels
         private void OnEventGroupChanged(EventGroupModel newEventGroup)
         {
             AsyncSubmitTypeCommand.RaiseCanExecuteChanged();
+            CanSubmitTypeCommand = true;
         }
 
         private async Task AsyncDeleteSelectedEventType()
@@ -209,7 +215,15 @@ namespace Kalendarzyk.ViewModels
 
         #endregion
         #region Command CanExecute Methods
-        public bool CanExecuteAsyncSubmitTypeCommand() => !string.IsNullOrEmpty(TypeName) && EventGroupsCCHelper.SelectedEventGroup != null;
+        public bool CanExecuteAsyncSubmitTypeCommand()
+        { 
+         if(string.IsNullOrEmpty(TypeName) || EventGroupsCCHelper.SelectedEventGroup == null)
+            {
+                return false;
+            }
+            CanSubmitTypeCommand = true;
+            return true;
+        }
         #endregion
     }
 }

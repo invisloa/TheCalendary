@@ -20,10 +20,8 @@ namespace Kalendarzyk.ViewModels.CCViewModels
 
         // Fields
         private readonly ObservableCollection<EventGroupModel> _eventGroupsList;
-        private readonly Dictionary<EventGroupModel, EventGroupViewModel> _eventVisualDetails;
         private readonly IMediator _mediator;
         private EventGroupModel _selectedEventGroup;
-        private EventGroupViewModel _selectedEventGroupViewModel;
         private IconModel _selectedVisualElement;
         private Color _selectedColor = Color.FromRgb(255, 0, 0); // Default to red
 
@@ -42,20 +40,6 @@ namespace Kalendarzyk.ViewModels.CCViewModels
                 }
             }
         }
-
-        public EventGroupViewModel SelectedEventGroupViewModel
-        {
-            get => _selectedEventGroupViewModel;
-            set
-            {
-                if (_selectedEventGroupViewModel != value)
-                {
-                    _selectedEventGroupViewModel = value;
-                    OnPropertyChanged();
-                }
-            }
-        }
-
         public IconModel SelectedVisualElement
         {
             get => _selectedVisualElement;
@@ -93,7 +77,6 @@ namespace Kalendarzyk.ViewModels.CCViewModels
         {
             _mediator = mediator;
             _eventGroupsList = eventGroupModels;
-            _eventVisualDetails = new Dictionary<EventGroupModel, EventGroupViewModel>();
 
             InitializeEventGroupsVisuals();
 
@@ -106,27 +89,27 @@ namespace Kalendarzyk.ViewModels.CCViewModels
         }
 
         // Private Methods
-        private void SetEventGroupFromViewModel(EventGroupViewModel viewModel)
+        private void SetEventGroupFromViewModel(EventGroupViewModel selectedEventGroupViewModel)
         {
-            var selectedEventGroup = _eventGroupsList.FirstOrDefault(o => o.Equals(viewModel.EventGroup));
+            foreach (var x in EventGroupsVisualsOC)
+            {
+                x.IsSelected = false;
+            }
+            var selectedEventGroup = _eventGroupsList.FirstOrDefault(o => o.Equals(selectedEventGroupViewModel.EventGroup));
             if (selectedEventGroup == null)
             {
-                throw new ArgumentException($"Invalid EventGroup value: {viewModel.EventGroup}");
+                throw new ArgumentException($"Invalid EventGroup value: {selectedEventGroupViewModel.EventGroup}");
             }
             SelectedEventGroup = selectedEventGroup;
-            VisuallySelectEventGroupElement();
+            selectedEventGroupViewModel.IsSelected = true;
             EventGroupChanged?.Invoke(SelectedEventGroup);
         }
 
         private void VisuallySelectEventGroupElement()
         {
-            foreach (var eventType in _eventVisualDetails.Values)
+            foreach (var eventType in EventGroupsVisualsOC)
             {
                 eventType.IsSelected = false;
-            }
-            if (SelectedEventGroup != null && _eventVisualDetails.ContainsKey(SelectedEventGroup))
-            {
-                _eventVisualDetails[SelectedEventGroup].IsSelected = true;
             }
         }
 
@@ -137,16 +120,8 @@ namespace Kalendarzyk.ViewModels.CCViewModels
             foreach (var eventType in _eventGroupsList)
             {
                 var viewModel = new EventGroupViewModel(eventType);
-                _eventVisualDetails[eventType] = viewModel;
                 EventGroupsVisualsOC.Add(viewModel);
             }
-        }
-
-        private void OnSelectEventGroupCommand(EventGroupViewModel eventGroup)
-        {
-            EventGroupsVisualsOC.ToList().ForEach(x => x.IsSelected = false); // Deselect all
-            eventGroup.IsSelected = true;
-            SelectedEventGroupViewModel = eventGroup;
         }
 
         private void OnEventGroupAdded(object sender, object args)
