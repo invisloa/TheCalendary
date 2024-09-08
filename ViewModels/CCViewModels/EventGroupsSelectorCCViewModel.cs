@@ -67,7 +67,7 @@ namespace Kalendarzyk.ViewModels.CCViewModels
         }
 
         // Commands
-        public RelayCommand<EventGroupViewModel> EventGroupSelectedCommand { get; private set; }
+        public RelayCommand<EventGroupViewModel> EventGroupSelectedCommand { get; set; }
 
         // Events
         public event Action<EventGroupModel> EventGroupChanged;

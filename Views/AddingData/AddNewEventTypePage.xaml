@@ -24,20 +24,16 @@
                 <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
-            <Frame Grid.Column="1" Padding="1" HorizontalOptions="CenterAndExpand" WidthRequest="250" >
+                <Frame Grid.Column="1" Padding="1" HorizontalOptions="CenterAndExpand" WidthRequest="250" >
 
                 <Entry Placeholder="{Binding PlaceholderText}" Text="{Binding TypeName, Mode=TwoWay}" Margin="10"  FontAttributes="Bold" FontSize="Body"
-                           HorizontalTextAlignment="Center" BackgroundColor="{Binding ColorButtonsHelperClass.SelectedColor, Mode=TwoWay}" TextColor="{DynamicResource MainTextColor}" VerticalOptions="Fill"/>
+                           HorizontalTextAlignment="Center" BackgroundColor="{Binding ColorButtonsHelperClass.SelectedColor, Mode=TwoWay}" TextColor="{DynamicResource MainTextColor}" />
             </Frame>
 
         </Grid>
 
-            
             <!-- Event Group selector -->
             <customControls:EventGroupsSelectorCC BindingContext="{Binding Source={x:Reference AddNewEventTypePageName}, Path=BindingContext}"/>
-
-
-
 
             <customControlsExtraOption:ExtraOptionsSelectorCC  />
 

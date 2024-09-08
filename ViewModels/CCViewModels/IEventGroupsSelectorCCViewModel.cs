@@ -9,7 +9,7 @@ namespace Kalendarzyk.ViewModels.CCViewModels
     {
         public EventGroupModel SelectedEventGroup { get; set; }
         ObservableCollection<EventGroupViewModel> EventGroupsVisualsOC { get; set; }
-        RelayCommand<EventGroupViewModel> EventGroupSelectedCommand { get; }
+        RelayCommand<EventGroupViewModel> EventGroupSelectedCommand { get; set; }
         public event Action<EventGroupModel> EventGroupChanged;
     }
 }

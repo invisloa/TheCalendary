@@ -85,11 +85,9 @@ namespace Kalendarzyk.ViewModels
             {
                 if (value == _typeName) return;
                 _typeName = value;
-                AsyncSubmitTypeCommand.RaiseCanExecuteChanged();
-                if(String.IsNullOrEmpty(value))
-                {
-                    CanSubmitTypeCommand = false;
-                }
+                AsyncSubmitTypeCommand.RaiseCanExecuteChanged();   // not fully working, no idea why...
+                CanExecuteAsyncSubmitTypeCommand();
+
                 OnPropertyChanged();
             }
         }
@@ -150,7 +148,7 @@ namespace Kalendarzyk.ViewModels
         private void OnEventGroupChanged(EventGroupModel newEventGroup)
         {
             AsyncSubmitTypeCommand.RaiseCanExecuteChanged();
-            CanSubmitTypeCommand = true;
+            CanExecuteAsyncSubmitTypeCommand();
         }
 
         private async Task AsyncDeleteSelectedEventType()
@@ -219,6 +217,7 @@ namespace Kalendarzyk.ViewModels
         { 
          if(string.IsNullOrEmpty(TypeName) || EventGroupsCCHelper.SelectedEventGroup == null)
             {
+                CanSubmitTypeCommand = false;
                 return false;
             }
             CanSubmitTypeCommand = true;

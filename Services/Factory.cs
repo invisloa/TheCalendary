@@ -1,4 +1,5 @@
-﻿using Kalendarzyk.Mediator;
+﻿using Kalendarzyk.Helpers;
+using Kalendarzyk.Mediator;
 using Kalendarzyk.Models.EventModels;
 using Kalendarzyk.Services.Data;
 using Kalendarzyk.ViewModels.CCViewModels;
@@ -127,6 +128,10 @@ namespace Kalendarzyk.Services
             var eventTypeModel = new EventTypeModel(EventGroup, eventTypeName, eventTypeColorString, defaultEventTime, quantity, microTasksList);
 
             return eventTypeModel;
+        }
+        internal static IEventTimeConflictChecker CreateNewEventTimeConflictChecker(ObservableCollection<EventModel> allEventsList)
+        {
+            return new EventTimeConflictChecker(allEventsList);
         }
     }
 }

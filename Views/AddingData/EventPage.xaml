@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Kalendarzyk.Views.EventPage"
+             Title="{Binding PageTitle}"
+             xmlns:customControls="clr-namespace:Kalendarzyk.Views.CustomControls"
+             xmlns:customControlsExtraOptions="clr-namespace:Kalendarzyk.Views.CustomControls.ExtraOptionsCC"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+
+    <ContentPage.Resources>
+        <Style x:Key="InvalidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="Red" />
+        </Style>
+        <Style x:Key="ValidEntryStyle" TargetType="Entry">
+            <Setter Property="TextColor" Value="{DynamicResource MainTextColor}" />
+        </Style>
+    </ContentPage.Resources>
+    <ScrollView  BackgroundColor="{DynamicResource MainBackgroundColor}">
+
+        <StackLayout >
+            <customControls:OperationsBarCC IsDeleteButtonVisible="{Binding IsEditMode}"
+                                            IsSaveButtonClickable="{Binding CanSubmitEvent}"
+                                            IsShareButtonVisible="{Binding IsEditMode}" 
+                                            IsEventTypesButtonisible="True"
+                                            AsyncSaveButtonCommand="{Binding AsyncSubmitEventCommand}"
+                                            AsyncDeleteButtonCommand="{Binding AsyncDeleteEventCommand}"
+                                            AsyncShareEventButtonCommand="{Binding AsyncShareEventCommand}"
+                                            
+                                            IsCompletedButtonVisible="True"
+                                            />
+            
+            
+            <customControls:RoundEntryCC Grid.Column="1" Placeholder="...EVENT TITLE..." Text="{Binding Title, Mode=TwoWay}" HorizontalOptions="Center" Margin="1" />
+
+            <customControls:RoundEntryCC Placeholder="...DESCRIPTION..." Text="{Binding Description, Mode=TwoWay}"  MyWidthRequest="250" HorizontalOptions="Center"
+                                         Margin="10, 10, 10, 10" />
+
+
+
+
+            <customControls:EventGroupsSelectorCC IsVisible="{Binding EventTypesInfoButton.IsSelected}"/>
+
+            <customControls:EventTypesCustomControl IsVisible="{Binding EventTypesInfoButton.IsSelected}"/>
+
+
+            <customControlsExtraOptions:ExtraOptionsSelectorCC />
+
+            <!--MOVE THOSE 3 TO ExtraOptionsSelectorCC-->
+
+            <!--MicroTasks CC-->
+            <customControls:MicroTasksListCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsMicroTasksBtnSelected}"  Margin="10"/>
+            <!--VALUE CC-->
+            <customControls:MeasurementSelectorCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsValueBtnSelected}"  Margin="10"/>
+            <!--Dates CC-->
+            <customControls:DateStartEndCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsDateBtnSelected}"  Margin="10" />
+
+
+
+        </StackLayout>
+
+    </ScrollView>
+
+</ContentPage>
