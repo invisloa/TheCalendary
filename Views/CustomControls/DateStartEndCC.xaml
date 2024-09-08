@@ -12,7 +12,8 @@
                 <Shadow Brush="Blue"
                 Offset="2,2"
                 Radius="5"
-                Opacity="0.5" />            </Border.Shadow>
+                Opacity="0.5" />            
+            </Border.Shadow>
 
             <StackLayout>
                 <StackLayout Orientation="Vertical">

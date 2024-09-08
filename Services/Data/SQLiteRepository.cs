@@ -253,7 +253,15 @@ namespace Kalendarzyk.Services.Data
         {
             try
             {
-                return await _database.Table<EventTypeModel>().ToListAsync();
+                var eventTypes = await _database.Table<EventTypeModel>().ToListAsync();
+                foreach (var eventType in eventTypes)
+                {
+                    eventType.EventGroup = await _database.Table<EventGroupModel>()
+                        .FirstOrDefaultAsync(group => group.Id == eventType.EventGroupId);xxx make a left join query
+
+                }
+
+                return eventTypes;
             }
             catch (Exception ex)
             {

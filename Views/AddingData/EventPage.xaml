@@ -28,11 +28,11 @@
                                             
                                             IsCompletedButtonVisible="True"
                                             />
-            
-            
-            <customControls:RoundEntryCC Grid.Column="1" Placeholder="...EVENT TITLE..." Text="{Binding Title, Mode=TwoWay}" HorizontalOptions="Center" Margin="1" />
 
-            <customControls:RoundEntryCC Placeholder="...DESCRIPTION..." Text="{Binding Description, Mode=TwoWay}"  MyWidthRequest="250" HorizontalOptions="Center"
+
+            <customControls:RoundEntryCC Grid.Column="1" Placeholder="...EVENT TITLE..." Text="{Binding EventName, Mode=TwoWay}" HorizontalOptions="Center" Margin="1" />
+
+            <customControls:RoundEntryCC Placeholder="...DESCRIPTION..." Text="{Binding EventDescription, Mode=TwoWay}"  MyWidthRequest="250" HorizontalOptions="Center"
                                          Margin="10, 10, 10, 10" />
 
 

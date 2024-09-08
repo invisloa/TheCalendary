@@ -11,6 +11,10 @@
     <FlyoutItem FlyoutDisplayOptions="AsMultipleItems">
         <Tab Title="Favorites">
             <ShellContent
+                Title="EventPage"
+                ContentTemplate="{DataTemplate local:EventPage}"
+                Route="xxx" />
+            <ShellContent
                 Title="AddNewEventTypePage"
                 ContentTemplate="{DataTemplate local:AddNewEventTypePage}"
                 Route="Faasdasd" />

@@ -16,7 +16,7 @@ namespace Kalendarzyk.ViewModels.Event
 {
     internal class AddNewEventGroupPageViewModel : BaseViewModel
     {
-
+        // Fields
         private readonly IEventRepository _eventRepository;
         private Dictionary<string, ObservableCollection<string>> _stringToOCMapper;
         private EventGroupModel _currentGroup;
@@ -26,12 +26,39 @@ namespace Kalendarzyk.ViewModels.Event
         private bool _isBgColorsTabSelected = false;
         private bool _isTextColorsTabSelected = false;
         private IEventsService _eventsService;
+        private EventGroupViewModel _eventGroup;
 
         private IColorButtonsSelectorHelperClass _backGroundColorsHelper = Factory.CreateNewIColorButtonsHelperClass(startingColor: Colors.Red);
-        public IColorButtonsSelectorHelperClass BackGroundColorsHelper
+
+        // Constructors
+        #region Constructors
+        // Constructor for create mode
+        public AddNewEventGroupPageViewModel()
         {
-            get { return _backGroundColorsHelper; }
+            _currentGroup = new EventGroupModel();
+            IsEdit = false;
+            _eventRepository = Factory.GetEventRepository;
+            InitializeCommon();
         }
+
+        // Constructor for edit mode
+        public AddNewEventGroupPageViewModel(EventGroupModel currentGroupModel)
+        {
+            IsEdit = true;
+            _eventRepository = Factory.GetEventRepository;
+            _eventGroup = new EventGroupViewModel(currentGroupModel);
+            InitializeCommon();
+            EventGroupName = currentGroupModel.GroupName;
+            SelectedVisualElementString = currentGroupModel.SelectedVisualElement.ElementName;
+            BackGroundColorsHelper.SelectedColor = Color.FromArgb(currentGroupModel.SelectedVisualElement.BackgroundColorString);
+            DeleteAsyncSelectedEventGroupCommand = new AsyncRelayCommand(OnDeleteMainTypeCommand);
+        }
+        #endregion
+
+        // Properties
+        #region Properties
+        public IColorButtonsSelectorHelperClass BackGroundColorsHelper => _backGroundColorsHelper;
+
         public bool IsIconsTabSelected
         {
             get => _isIconsTabSelected;
@@ -41,6 +68,7 @@ namespace Kalendarzyk.ViewModels.Event
                 OnPropertyChanged();
             }
         }
+
         public bool IsBgColorsTabSelected
         {
             get => _isBgColorsTabSelected;
@@ -50,6 +78,7 @@ namespace Kalendarzyk.ViewModels.Event
                 OnPropertyChanged();
             }
         }
+
         public bool IsTextColorsTabSelected
         {
             get => _isTextColorsTabSelected;
@@ -59,14 +88,13 @@ namespace Kalendarzyk.ViewModels.Event
                 OnPropertyChanged();
             }
         }
+
         public ObservableCollection<SelectableButtonViewModel> MainButtonVisualsSelectors { get; set; }
         public ObservableCollection<SelectableButtonViewModel> IconsTabsOC { get; set; }
 
         public string SubmitGroupButtonText => _isEdit ? "SUBMIT CHANGES" : "ADD NEW GROUP";
         public string MainTypePlaceholderText => _isEdit ? $"TYPE NEW NAME FOR: {EventGroupName}" : "...NEW GROUP NAME...";
 
-
-        #region Properties
         public string EventGroupName
         {
             get => _currentGroup.GroupName;
@@ -77,6 +105,7 @@ namespace Kalendarzyk.ViewModels.Event
                 AsyncSubmitGroupCommand.RaiseCanExecuteChanged();
             }
         }
+
         public bool IsEdit
         {
             get => _isEdit;
@@ -86,6 +115,7 @@ namespace Kalendarzyk.ViewModels.Event
                 OnPropertyChanged();
             }
         }
+
         public string SelectedVisualElementString
         {
             get => _currentGroup.SelectedVisualElement.ElementName;
@@ -101,32 +131,9 @@ namespace Kalendarzyk.ViewModels.Event
         public AsyncRelayCommand AsyncSubmitGroupCommand { get; set; }
         public AsyncRelayCommand DeleteAsyncSelectedEventGroupCommand { get; set; }
         #endregion
-        private EventGroupViewModel _eventGroup;
 
-        #region Constructors
-        //Constructor for create mode
-        public AddNewEventGroupPageViewModel()
-        {
-            _currentGroup = new EventGroupModel();
-            IsEdit = false;
-            _eventRepository = Factory.GetEventRepository;
-            InitializeCommon();
-        }
-        //Constructor for edit mode
-        public AddNewEventGroupPageViewModel(EventGroupModel currentGroupModel)
-        {
-            IsEdit = true;
-            _eventRepository = Factory.GetEventRepository;
-            _eventGroup = new EventGroupViewModel(currentGroupModel);
-            InitializeCommon();
-            EventGroupName = currentGroupModel.GroupName;
-            SelectedVisualElementString = currentGroupModel.SelectedVisualElement.ElementName;
-            BackGroundColorsHelper.SelectedColor = Color.FromArgb(currentGroupModel.SelectedVisualElement.BackgroundColorString);
-            DeleteAsyncSelectedEventGroupCommand = new AsyncRelayCommand(OnDeleteMainTypeCommand);
-        }
-        #endregion
-
-        #region private methods
+        // Private Methods
+        #region Private Methods
         private void InitializeCommon()
         {
             _eventsService = Factory.GetEventService;
@@ -134,6 +141,7 @@ namespace Kalendarzyk.ViewModels.Event
             InitializeCommands();
             InitializeSelectors();
         }
+
         private void InitializeIconsTabs()
         {
             IconsTabsOC = new ObservableCollection<SelectableButtonViewModel>
@@ -147,6 +155,7 @@ namespace Kalendarzyk.ViewModels.Event
             RefreshIconsToShowOC();
             OnPropertyChanged(nameof(IconsTabsOC));
         }
+
         private void RefreshIconsToShowOC()
         {
             _stringToOCMapper = new Dictionary<string, ObservableCollection<string>>
@@ -158,11 +167,13 @@ namespace Kalendarzyk.ViewModels.Event
                 { "Others", IconFontsInitialiserHelperClass.GetOthersIcons() }
             };
         }
+
         private void InitializeCommands()
         {
             AsyncSubmitGroupCommand = new AsyncRelayCommand(OnSubmitGroupCommand, CanExecuteSubmitGroupCommand);
             ExactIconSelectedCommand = new RelayCommand<string>(OnExactIconSelectedCommand);
         }
+
         private void InitializeSelectors()
         {
             SelectedVisualElementString = IconFont.Accessibility;
@@ -206,6 +217,7 @@ namespace Kalendarzyk.ViewModels.Event
                 }
             }
         }
+
         private async Task OnDeleteMainTypeCommand()
         {
             var eventTypesInDb = _eventsService.AllEventTypesOC.Where(x => x.EventGroupId == _currentGroup.Id);
@@ -232,6 +244,7 @@ namespace Kalendarzyk.ViewModels.Event
                 await Shell.Current.GoToAsync("..");
             }
         }
+
         private bool CanExecuteSubmitGroupCommand()
         {
             return !string.IsNullOrEmpty(EventGroupName);
@@ -242,6 +255,7 @@ namespace Kalendarzyk.ViewModels.Event
             var lastSelectedButton = IconsTabsOC.Single(x => x.ButtonText == iconType);
             OnExactIconsTabClick(lastSelectedButton, _stringToOCMapper[iconType]);
         }
+
         private void OnExactIconsTabClick(SelectableButtonViewModel clickedButton, ObservableCollection<string> iconsToShowOC)
         {
             SelectableButtonViewModel.SingleButtonSelection(clickedButton, IconsTabsOC);
@@ -249,11 +263,11 @@ namespace Kalendarzyk.ViewModels.Event
             IconsToShowStringsOC = iconsToShowOC;
             OnPropertyChanged(nameof(IconsToShowStringsOC));
         }
+
         private async Task DeleteEventGroup()
         {
             // Perform the operation to delete all events of the event type.
             await _eventsService.DeleteEventGroupAsync(_currentGroup);
-
         }
 
         private void OnExactIconSelectedCommand(string visualStringSource)
@@ -261,6 +275,8 @@ namespace Kalendarzyk.ViewModels.Event
             SelectedVisualElementString = visualStringSource;
         }
         #endregion
+
+        #region COLOR BUTTONS
         private void OnShowIconsTabCommand(SelectableButtonViewModel clickedButton)
         {
             SetAllSubTabsVisibilityOff();
@@ -270,6 +286,7 @@ namespace Kalendarzyk.ViewModels.Event
             var buttonToSelect = IconsTabsOC.Single(x => x.ButtonText == lastSelectedIconType);
             OnExactIconsTabClick(buttonToSelect, _stringToOCMapper[lastSelectedIconType]);
         }
+
         private void ClearIconsTabs()
         {
             if (IconsTabsOC != null && IconsTabsOC.Any())
@@ -281,7 +298,7 @@ namespace Kalendarzyk.ViewModels.Event
                 IconsToShowStringsOC.Clear();
             }
         }
-        #region COLOR BUTTONS
+
         private void OnShowBgColorsCommand(SelectableButtonViewModel clickedButton)
         {
             SetAllSubTabsVisibilityOff();
@@ -289,6 +306,7 @@ namespace Kalendarzyk.ViewModels.Event
             ClearIconsTabs();
             SelectableButtonViewModel.SingleButtonSelection(clickedButton, MainButtonVisualsSelectors);
         }
+
         private void OnShowTextColorsCommand(SelectableButtonViewModel clickedButton)
         {
             SetAllSubTabsVisibilityOff();
@@ -296,6 +314,7 @@ namespace Kalendarzyk.ViewModels.Event
             ClearIconsTabs();
             SelectableButtonViewModel.SingleButtonSelection(clickedButton, MainButtonVisualsSelectors);
         }
+
         private void SetAllSubTabsVisibilityOff()
         {
             IsTextColorsTabSelected = false;
@@ -303,8 +322,5 @@ namespace Kalendarzyk.ViewModels.Event
             IsIconsTabSelected = false;
         }
         #endregion
-
-
-
     }
 }

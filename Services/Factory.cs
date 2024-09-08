@@ -133,5 +133,7 @@ namespace Kalendarzyk.Services
         {
             return new EventTimeConflictChecker(allEventsList);
         }
+        internal static ExtraOptionsEventsHelperClass CreateNewExtraOptionsEventHelperClass() => new ExtraOptionsEventsHelperClass();
+        internal static ExtraOptionsEventsHelperClass CreateNewExtraOptionsEventHelperClass(EventTypeModel eventTypeModel) => new ExtraOptionsEventsHelperClass(eventTypeModel);
     }
 }
