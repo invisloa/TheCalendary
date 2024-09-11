@@ -1,4 +1,5 @@
-﻿using System.Globalization;
+﻿using Kalendarzyk.Services;
+using System.Globalization;
 
 namespace Kalendarzyk.Helpers.Converters
 {
@@ -10,7 +11,7 @@ namespace Kalendarzyk.Helpers.Converters
 			{
 				return 1.0; // Fully opaque
 			}
-			return 0.90; // Semi-transparent or any other value you prefer
+			return Factory.ButtonOpacityValue; // Semi-transparent or any other value you prefer
 		}
 
 		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)

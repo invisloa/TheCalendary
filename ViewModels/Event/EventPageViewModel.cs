@@ -197,7 +197,6 @@ namespace Kalendarzyk.ViewModels.Event
         {
             foreach (var eventType in AllEventTypesOC)
             {
-                eventType.EventTypeColorString = "#FFFFFFFF"; // White color in ARGB format
                 eventType.IsSelectedToFilter = false;
 
                 if (eventType.Equals(_selectedEventType))

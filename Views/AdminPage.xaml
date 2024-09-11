@@ -8,8 +8,5 @@
         <Button Text="Delete ALL Events" Clicked="DeleteAllEvents_Clicked" Margin="10"/>
         <Button Text="Delete ALL Event Types" Clicked="DeleteAllEventTypes_Clicked" Margin="10"/>
         <Button Text="Delete ALL Event Groups (Duplicate)" Clicked="DeleteAllEventGroups_Clicked_2" Margin="10"/>
-        <Button Text="Add Dummy Event" Clicked="AddDummyEvent_Clicked" Margin="10"/>
-        <Button Text="Add Dummy Event Type" Clicked="AddDummyEventType_Clicked" Margin="10"/>
-        <Button Text="Add Dummy Event Group" Clicked="AddDummyEventGroup_Clicked" Margin="10"/>
     </VerticalStackLayout>
 </ContentPage>

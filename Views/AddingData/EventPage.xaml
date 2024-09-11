@@ -36,9 +36,20 @@
                                          Margin="10, 10, 10, 10" />
 
 
+            
+       
+                <Label Text="{Binding SelectedEventType.EventGroup.SelectedVisualElement.ElementName}" 
+                                   TextColor="{Binding SelectedEventType.EventGroup.SelectedVisualElement.TextColorString, Converter={StaticResource ArgbToColorConverter}}" 
+                                   Style="{StaticResource GoogleFont}" 
+                                   Opacity="{Binding IsSelectedToFilter, Converter={StaticResource boolToAlphaConverter}}"
+                                   Scale="{Binding IsSelectedToFilter, Converter={StaticResource boolToScaleConverter}}"
+                                   HorizontalOptions="Center" 
+                                   VerticalOptions="Center"/>
+            
 
 
-            <customControls:EventGroupsSelectorCC IsVisible="{Binding EventTypesInfoButton.IsSelected}"/>
+
+                <customControls:EventGroupsSelectorCC IsVisible="{Binding EventTypesInfoButton.IsSelected}"/>
 
             <customControls:EventTypesCustomControl IsVisible="{Binding EventTypesInfoButton.IsSelected}"/>
 

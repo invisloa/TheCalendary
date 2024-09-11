@@ -1,4 +1,5 @@
 ﻿using Kalendarzyk.Models.EventModels;
+using Microsoft.Data.Sqlite;
 using SQLite;
 using System;
 using System.Collections.Generic;
@@ -32,10 +33,13 @@ namespace Kalendarzyk.Services.Data
         {
             try
             {
+            //  await ResetDatabaseAsync();
                 await _database.CreateTableAsync<IconModel>();
                 await _database.CreateTableAsync<EventGroupModel>();
                 await _database.CreateTableAsync<EventTypeModel>();
                 await _database.CreateTableAsync<EventModel>();
+                await _database.CreateTableAsync<MicroTaskModel>();
+
             }
             catch (Exception ex)
             {
@@ -172,23 +176,79 @@ namespace Kalendarzyk.Services.Data
 
 
 
+
         public async Task<IEnumerable<EventGroupModel>> GetEventGroupsListAsync()
         {
+            var eventGroups = new List<EventGroupModel>();
+
             try
             {
-                var eventGroups = await _database.Table<EventGroupModel>().ToListAsync();
-                foreach (var eventGroup in eventGroups)
+                var connectionString = $"Data Source={_database.DatabasePath};"; // Use "Data Source=" format
+
+                // Open a connection to the database
+                using (var connection = new SqliteConnection(connectionString))
                 {
-                    eventGroup.SelectedVisualElement = await _database.Table<IconModel>()
-                        .FirstOrDefaultAsync(icon => icon.Id == eventGroup.SelectedVisualElementId);
+                    await connection.OpenAsync();
+
+                    // SQL query to perform a LEFT JOIN to fetch EventGroupModels with their related IconModels
+                    var query = @"SELECT 
+                                eg.Id AS EventGroupId, 
+                                eg.GroupName, 
+                                eg.SelectedVisualElementId, 
+                                im.Id AS IconId, 
+                                im.ElementName, 
+                                im.BackgroundColorString, 
+                                im.TextColorString 
+                                FROM 
+                                EventGroupModel eg 
+                                LEFT JOIN 
+                                IconModel im 
+                                ON 
+                                eg.SelectedVisualElementId = im.Id";
+
+                    // Create a command with the SQL query
+                    using (var command = new SqliteCommand(query, connection))
+                    using (var reader = await command.ExecuteReaderAsync())
+                    {
+                        // Read each row in the result set
+                        while (await reader.ReadAsync())
+                        {
+                            var eventGroupId = reader.GetInt32(reader.GetOrdinal("EventGroupId"));
+                            var groupName = reader.GetString(reader.GetOrdinal("GroupName"));
+                            var selectedVisualElementId = reader.GetInt32(reader.GetOrdinal("SelectedVisualElementId"));
+
+                            // Initialize EventGroupModel
+                            var eventGroup = new EventGroupModel
+                            {
+                                Id = eventGroupId,
+                                GroupName = groupName,
+                                SelectedVisualElementId = selectedVisualElementId
+                            };
+
+                            // Initialize IconModel if present
+                            if (!reader.IsDBNull(reader.GetOrdinal("IconId")))
+                            {
+                                eventGroup.SelectedVisualElement = new IconModel
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("IconId")),
+                                    ElementName = reader.GetString(reader.GetOrdinal("ElementName")),
+                                    BackgroundColorString = reader.GetString(reader.GetOrdinal("BackgroundColorString")),
+                                    TextColorString = reader.GetString(reader.GetOrdinal("TextColorString"))
+                                };
+                            }
+
+                            // Add the initialized EventGroupModel to the list
+                            eventGroups.Add(eventGroup);
+                        }
+                    }
                 }
-                return eventGroups;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Failed to retrieve event groups: {ex.Message}");
-                return Enumerable.Empty<EventGroupModel>(); // Return an empty list in case of failure
+                Console.WriteLine($"Failed to retrieve event groups with join: {ex.Message}");
             }
+
+            return eventGroups;
         }
 
 
@@ -249,39 +309,163 @@ namespace Kalendarzyk.Services.Data
             }
         }
 
-        public async Task<IEnumerable<EventTypeModel>> GetEventTypesListAsync()
+
+
+
+
+public async Task<IEnumerable<EventTypeModel>> GetEventTypesListAsync()
+    {
+        var eventTypes = new List<EventTypeModel>();
+
+        try
         {
-            try
-            {
-                // Fetch both tables into memory
-                var eventTypes = await _database.Table<EventTypeModel>().ToListAsync();
-                var eventGroups = await _database.Table<EventGroupModel>().ToListAsync();
+            // Correct the connection string format
+            var connectionString = $"Data Source={_database.DatabasePath};"; // Use "Data Source=" format
 
-                // Perform the left join in memory
-                var result = from eventType in eventTypes
-                             join eventGroup in eventGroups
-                             on eventType.EventGroupId equals eventGroup.Id into eventGroupJoin
-                             from eventGroup in eventGroupJoin.DefaultIfEmpty() // Left join
-                             select new EventTypeModel
-                             {
-                                 Id = eventType.Id,
-                                 EventTypeName = eventType.EventTypeName,
-                                 EventGroupId = eventType.EventGroupId,
-                                 EventGroup = eventGroup // This will be null if there's no matching EventGroup
-                             };
-
-                return result;
-            }
-            catch (Exception ex)
+            // Open a connection to the database
+            using (var connection = new SqliteConnection(connectionString))
             {
-                Console.WriteLine($"Failed to retrieve event types: {ex.Message}");
-                return Enumerable.Empty<EventTypeModel>(); // Return an empty list in case of failure
+                await connection.OpenAsync();
+
+                // SQL query to perform a LEFT JOIN to fetch EventTypeModels with their related EventGroupModels and IconModels
+                var query = @"SELECT 
+                            et.Id AS EventTypeId, 
+                            et.EventGroupId,
+                            et.EventTypeName, 
+                            et.EventTypeColorString, 
+                            et.DefaultEventTimeSpanString,
+                            et.IsValueType,
+                            et.IsMicroTaskType,
+                            eg.Id AS EventGroupId, 
+                            eg.GroupName,
+                            eg.SelectedVisualElementId,
+                            im.Id AS IconId, 
+                            im.ElementName, 
+                            im.BackgroundColorString, 
+                            im.TextColorString 
+                          FROM 
+                            EventTypeModel et 
+                          LEFT JOIN 
+                            EventGroupModel eg 
+                          ON 
+                            et.EventGroupId = eg.Id
+                          LEFT JOIN 
+                            IconModel im 
+                          ON 
+                            eg.SelectedVisualElementId = im.Id";
+
+                // Create a command with the SQL query
+                using (var command = new SqliteCommand(query, connection))
+                using (var reader = await command.ExecuteReaderAsync())
+                {
+                    // Read each row in the result set
+                    while (await reader.ReadAsync())
+                    {
+                        // Read EventTypeModel data
+                        var eventTypeId = reader.GetInt32(reader.GetOrdinal("EventTypeId"));
+                        var eventGroupId = reader.GetInt32(reader.GetOrdinal("EventGroupId"));
+                        var eventTypeName = reader.GetString(reader.GetOrdinal("EventTypeName"));
+                        var eventTypeColorString = reader.GetString(reader.GetOrdinal("EventTypeColorString"));
+
+                        // Safely handle TimeSpan conversion
+                        string defaultEventTimeSpan = reader.GetString(reader.GetOrdinal("DefaultEventTimeSpanString"));
+                        var isValueType = reader.GetBoolean(reader.GetOrdinal("IsValueType"));
+                        var isMicroTaskType = reader.GetBoolean(reader.GetOrdinal("IsMicroTaskType"));
+
+                        // Initialize EventTypeModel
+                        var eventType = new EventTypeModel
+                        {
+                            Id = eventTypeId,
+                            EventGroupId = eventGroupId,
+                            EventTypeName = eventTypeName,
+                            EventTypeColorString = eventTypeColorString,
+                            DefaultEventTimeSpanString = defaultEventTimeSpan,
+                            DefaultEventTimeSpan = TimeSpan.Parse(defaultEventTimeSpan),
+                            IsValueType = isValueType,
+                            IsMicroTaskType = isMicroTaskType,
+                            DefaultMicroTasks = new List<MicroTaskModel>() // Initialize the list for MicroTasks
+                        };
+
+                        // Initialize EventGroupModel if present
+                        if (!reader.IsDBNull(reader.GetOrdinal("EventGroupId")))
+                        {
+                            var eventGroup = new EventGroupModel
+                            {
+                                Id = reader.GetInt32(reader.GetOrdinal("EventGroupId")),
+                                GroupName = reader.GetString(reader.GetOrdinal("GroupName")),
+                                SelectedVisualElementId = reader.GetInt32(reader.GetOrdinal("SelectedVisualElementId")),
+                            };
+
+                            // Initialize IconModel if present
+                            if (!reader.IsDBNull(reader.GetOrdinal("IconId")))
+                            {
+                                eventGroup.SelectedVisualElement = new IconModel
+                                {
+                                    Id = reader.GetInt32(reader.GetOrdinal("IconId")),
+                                    ElementName = reader.GetString(reader.GetOrdinal("ElementName")),
+                                    BackgroundColorString = reader.GetString(reader.GetOrdinal("BackgroundColorString")),
+                                    TextColorString = reader.GetString(reader.GetOrdinal("TextColorString"))
+                                };
+                            }
+
+                            // Assign the initialized EventGroup to EventType
+                            eventType.EventGroup = eventGroup;
+                        }
+
+                        // Fetch MicroTasks associated with the current EventType
+                        var microTaskQuery = @"SELECT 
+                                            mt.Id, 
+                                            mt.AssociatedId, 
+                                            mt.Type, 
+                                            mt.Name, 
+                                            mt.IsCompleted 
+                                           FROM 
+                                            MicroTaskModel mt 
+                                           WHERE 
+                                            mt.AssociatedId = @EventTypeId AND mt.Type = @TaskType";
+
+                        using (var microTaskCommand = new SqliteCommand(microTaskQuery, connection))
+                        {
+                            microTaskCommand.Parameters.AddWithValue("@EventTypeId", eventTypeId);
+                            microTaskCommand.Parameters.AddWithValue("@TaskType", (int)TaskType.EventType); // Filter by EventType
+
+                            using (var microTaskReader = await microTaskCommand.ExecuteReaderAsync())
+                            {
+                                while (await microTaskReader.ReadAsync())
+                                {
+                                    var microTask = new MicroTaskModel
+                                    {
+                                        Id = microTaskReader.GetInt32(microTaskReader.GetOrdinal("Id")),
+                                        AssociatedId = microTaskReader.GetInt32(microTaskReader.GetOrdinal("AssociatedId")),
+                                        Type = (TaskType)microTaskReader.GetInt32(microTaskReader.GetOrdinal("Type")),
+                                        Name = microTaskReader.GetString(microTaskReader.GetOrdinal("Name")),
+                                        IsCompleted = microTaskReader.GetBoolean(microTaskReader.GetOrdinal("IsCompleted"))
+                                    };
+
+                                    // Add MicroTask to the EventType's list
+                                    eventType.DefaultMicroTasks.Add(microTask);
+                                }
+                            }
+                        }
+
+                        // Add the initialized EventTypeModel to the list
+                        eventTypes.Add(eventType);
+                    }
+                }
             }
         }
+        catch (Exception ex)
+        {
+            Console.WriteLine($"Failed to retrieve event types: {ex.Message}");
+        }
+
+        return eventTypes;
+    }
 
 
 
-        public async Task<OperationResult> UpdateEventTypeAsync(EventTypeModel eventTypeToUpdate)
+
+    public async Task<OperationResult> UpdateEventTypeAsync(EventTypeModel eventTypeToUpdate)
         {
             try
             {

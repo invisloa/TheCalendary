@@ -31,15 +31,16 @@
                         </Grid.ColumnDefinitions>
 
                         <Button Grid.Column="1"
-                                Text="{Binding EventTypeName}" Margin="-10, 0, 0, 0"
+                                Text="{Binding EventTypeName}" Margin="-10, 0, 0, 0" BackgroundColor="{Binding EventTypeColorString}"
                                 Opacity="{Binding IsSelectedToFilter, Converter={StaticResource boolToAlphaConverter}}"
                                 TextColor="White">
-                            <Button.BackgroundColor>
+                            <!--<Button.BackgroundColor>
                                 <MultiBinding Converter="{StaticResource multiValueBoolToColorConverter}">
                                     <Binding Path="IsSelectedToFilter" />
                                     <Binding Path="EventTypeColorString" />
                                 </MultiBinding>
-                            </Button.BackgroundColor>
+                            </Button.BackgroundColor>-->
+                            
                             <Button.BorderWidth>5</Button.BorderWidth>
                             <Button.Command>
                                 <Binding Path="BindingContext.SelectEventTypeCommand" Source="{RelativeSource AncestorType={x:Type ContentView}}" />

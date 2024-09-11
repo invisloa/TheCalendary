@@ -21,6 +21,10 @@ namespace Kalendarzyk.Services
 {
     internal class Factory
     {
+        public static object ButtonOpacityValue { get; set; } = 0.65;
+
+
+
         // Event Repository Singleton Pattern
         private static IEventRepository _eventRepository;
         private static IMediator _mediator;

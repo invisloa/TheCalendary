@@ -16,7 +16,8 @@ namespace Kalendarzyk.Models.EventModels
         public string EventTypeName { get; set; }
 
         public string EventTypeColorString { get; set; }
-
+        public string DefaultEventTimeSpanString { get; set; }
+        [Ignore]
         public TimeSpan DefaultEventTimeSpan { get; set; }
 
         public bool IsValueType { get; set; }
@@ -69,6 +70,7 @@ namespace Kalendarzyk.Models.EventModels
             EventTypeName = eventTypeName;
             EventTypeColorString = eventTypeColorString;
             DefaultEventTimeSpan = defaultEventTime;
+            DefaultEventTimeSpanString = defaultEventTime.ToString();
             DefaultMicroTasks = defaultMicroTasks;
             if(quantity != null)
             {
