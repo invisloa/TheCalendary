@@ -17,7 +17,7 @@ namespace Kalendarzyk.Helpers.Converters
             if (argb.StartsWith("#"))
                 argb = argb.Substring(1);
 
-            if (argb.Length != 8)
+            if (argb.Length != 8)       the string length is not 8 characters long
                 return Colors.Transparent;
 
             return Color.FromArgb(argb);

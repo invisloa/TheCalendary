@@ -54,7 +54,7 @@
                         </Button>
 
                         <Frame Grid.Column="0"
-                               BackgroundColor="{Binding EventGroup.SelectedVisualElement.BackgroundColorString, Converter={StaticResource ArgbToColorConverter}}" 
+                               BackgroundColor="{Binding EventGroup.SelectedVisualElement.BackgroundColorString, Converter={StaticResource ArgbToColorConverter}}"
                                Padding="0"
                                WidthRequest="40"
                                HeightRequest="40"
