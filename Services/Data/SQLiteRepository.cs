@@ -253,15 +253,24 @@ namespace Kalendarzyk.Services.Data
         {
             try
             {
+                // Fetch both tables into memory
                 var eventTypes = await _database.Table<EventTypeModel>().ToListAsync();
-                foreach (var eventType in eventTypes)
-                {
-                    eventType.EventGroup = await _database.Table<EventGroupModel>()
-                        .FirstOrDefaultAsync(group => group.Id == eventType.EventGroupId);xxx make a left join query
+                var eventGroups = await _database.Table<EventGroupModel>().ToListAsync();
 
-                }
+                // Perform the left join in memory
+                var result = from eventType in eventTypes
+                             join eventGroup in eventGroups
+                             on eventType.EventGroupId equals eventGroup.Id into eventGroupJoin
+                             from eventGroup in eventGroupJoin.DefaultIfEmpty() // Left join
+                             select new EventTypeModel
+                             {
+                                 Id = eventType.Id,
+                                 EventTypeName = eventType.EventTypeName,
+                                 EventGroupId = eventType.EventGroupId,
+                                 EventGroup = eventGroup // This will be null if there's no matching EventGroup
+                             };
 
-                return eventTypes;
+                return result;
             }
             catch (Exception ex)
             {
@@ -269,6 +278,8 @@ namespace Kalendarzyk.Services.Data
                 return Enumerable.Empty<EventTypeModel>(); // Return an empty list in case of failure
             }
         }
+
+
 
         public async Task<OperationResult> UpdateEventTypeAsync(EventTypeModel eventTypeToUpdate)
         {
