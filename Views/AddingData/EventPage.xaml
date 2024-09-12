@@ -59,9 +59,9 @@
             <!--MOVE THOSE 3 TO ExtraOptionsSelectorCC-->
 
             <!--MicroTasks CC-->
-            <customControls:MicroTasksListCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsMicroTasksBtnSelected}"  Margin="10"/>
+            <customControls:MicroTasksListCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsMicroTasksType}"  Margin="10"/>
             <!--VALUE CC-->
-            <customControls:MeasurementSelectorCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsValueBtnSelected}"  Margin="10"/>
+            <customControls:MeasurementSelectorCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsValueType}"  Margin="10"/>
             <!--Dates CC-->
             <customControls:DateStartEndCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsDateBtnSelected}"  Margin="10" />
 

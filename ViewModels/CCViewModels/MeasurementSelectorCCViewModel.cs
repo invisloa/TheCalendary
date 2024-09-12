@@ -76,7 +76,6 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 				OnPropertyChanged(nameof(QuantityValue));
 			}
 		}
-		public bool IsValueTypeSelected { get => _isValueTypeSelected; set => _isValueTypeSelected = value; }
 		public decimal QuantityValue
 		{
 			get
@@ -107,7 +106,6 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 				if (userEventTypeModel.IsValueType)
 				{
 					SelectedMeasurementUnit = MeasurementUnitsOC.FirstOrDefault(mu => mu.TypeOfMeasurementUnit == userEventTypeModel.DefaultQuantity.Unit);
-					IsValueTypeSelected = true;
 				}
 			}
 			catch (Exception ex)

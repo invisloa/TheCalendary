@@ -71,7 +71,11 @@ namespace Kalendarzyk.Models.EventModels
             EventTypeColorString = eventTypeColorString;
             DefaultEventTimeSpan = defaultEventTime;
             DefaultEventTimeSpanString = defaultEventTime.ToString();
-            DefaultMicroTasks = defaultMicroTasks;
+            if(defaultMicroTasks != null)
+            {
+                IsMicroTaskType = true;
+                DefaultMicroTasks = defaultMicroTasks;
+            }
             if(quantity != null)
             {
                 DefaultQuantity = quantity;

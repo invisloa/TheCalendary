@@ -112,12 +112,12 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
             {
                 MicroTasksCCAdapter = Factory.CreateNewMicroTasksCCAdapter(new List<MicroTaskModel>());
             }
-            IsMicroTasksBtnSelected = IsMicroTasksType = UpdateButtonState(clickedButton);
+            IsMicroTasksType = UpdateButtonState(clickedButton);
         }
 
         protected override void OnIsEventValueType(SelectableButtonViewModel clickedButton)
         {
-            IsValueBtnSelected = IsValueType = UpdateButtonState(clickedButton);
+            IsValueType = UpdateButtonState(clickedButton);
         }
     }
 }

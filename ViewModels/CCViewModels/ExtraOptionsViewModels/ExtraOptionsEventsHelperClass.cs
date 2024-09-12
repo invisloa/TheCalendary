@@ -78,9 +78,9 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 		private void ReloadExtraOptionsButtons() // TODO JO XXX REFACTOR THIS to be more modular
 		{
 			ExtraOptionsButtonsSelectors[1].IsEnabled = EventType?.IsValueType ?? true;
-			ExtraOptionsButtonsSelectors[1].IsSelected = IsValueBtnSelected;
+			ExtraOptionsButtonsSelectors[1].IsSelected = IsValueType;
 			ExtraOptionsButtonsSelectors[0].IsEnabled = EventType?.IsMicroTaskType ?? true;
-			ExtraOptionsButtonsSelectors[0].IsSelected = IsMicroTasksBtnSelected;
+			ExtraOptionsButtonsSelectors[0].IsSelected = IsMicroTasksType;
 			ExtraOptionsButtonsSelectors[2].IsEnabled = true;
 			ExtraOptionsButtonsSelectors[2].IsSelected = IsDateBtnSelected;
 		}

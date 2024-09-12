@@ -17,13 +17,8 @@ namespace Kalendarzyk.Views.CustomControls.ExtraOptionsCC.ExtraOptionsViewModels
             get => _isMicroTasksType;
             set
             {
-                if (SetProperty(ref _isMicroTasksType, value))
-                {
-                    if (!value)
-                    {
-                        IsMicroTasksBtnSelected = false;
-                    }
-                }
+                SetProperty(ref _isMicroTasksType, value);
+                
             }
         }
 
@@ -33,29 +28,11 @@ namespace Kalendarzyk.Views.CustomControls.ExtraOptionsCC.ExtraOptionsViewModels
             get => _isValueType;
             set
             {
-                if (SetProperty(ref _isValueType, value))
-                {
-                    if (!value)
-                    {
-                        IsValueBtnSelected = false;
-                    }
-                }
+                SetProperty(ref _isValueType, value);
+
             }
         }
 
-        private bool _isMicroTasksBtnSelected;
-        public bool IsMicroTasksBtnSelected
-        {
-            get => IsMicroTasksType ? _isMicroTasksBtnSelected : false;
-            set => SetProperty(ref _isMicroTasksBtnSelected, value);
-        }
-
-        private bool _isValueBtnSelected;
-        public bool IsValueBtnSelected
-        {
-            get => IsValueType ? _isValueBtnSelected : false;
-            set => SetProperty(ref _isValueBtnSelected, value);
-        }
 
         private MicroTasksCCAdapterVM _microTasksCCAdapter;
         public MicroTasksCCAdapterVM MicroTasksCCAdapter
@@ -94,12 +71,12 @@ namespace Kalendarzyk.Views.CustomControls.ExtraOptionsCC.ExtraOptionsViewModels
 
         protected virtual void OnIsMicroTasksSelected(SelectableButtonViewModel clickedButton)
         {
-            IsMicroTasksBtnSelected = UpdateButtonState(clickedButton);
+            IsMicroTasksType = UpdateButtonState(clickedButton);
         }
 
         protected virtual void OnIsEventValueType(SelectableButtonViewModel clickedButton)
         {
-            IsValueBtnSelected = UpdateButtonState(clickedButton);
+            IsValueType = UpdateButtonState(clickedButton);
         }
 
         protected bool UpdateButtonState(SelectableButtonViewModel clickedButton)
