@@ -71,11 +71,7 @@ namespace Kalendarzyk.Views
         {
             try
             {
-                foreach (var group in _eventsService.AllEventGroupsOC.ToList())
-                {
-                    await _eventsService.DeleteEventGroupAsync(group);
-                }
-                await DisplayAlert("Success", "All event groups have been deleted.", "OK");
+               await _eventRepository.ClearAll();
             }
             catch (Exception ex)
             {

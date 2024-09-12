@@ -14,9 +14,9 @@ namespace Kalendarzyk.Models.EventModels
         [MaxLength(55)]
         public string TextColorString { get; set; }
         [Ignore]
-        public Color BackgroundColor => Color.FromArgb(BackgroundColorString);
+        public Color BackgroundColor => Color.FromRgba(BackgroundColorString);
         [Ignore]
-        public Color TextColor => Color.FromArgb(TextColorString);
+        public Color TextColor => Color.FromRgba(TextColorString);
         public IconModel() { }
 
         public IconModel(string icon, Color backgroundColor, Color textColor)

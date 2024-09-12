@@ -27,6 +27,7 @@ namespace Kalendarzyk.Services.Data
         Task<OperationResult> UpdateEventTypeAsync(EventTypeModel eventTypeToUpdate);
         Task<OperationResult> DeleteEventTypeAsync(EventTypeModel eventTypeToDelete);
         Task<OperationResult> ClearAllEventTypesAsync();
+        Task<OperationResult> ClearAll();
 
 
         // File Operations

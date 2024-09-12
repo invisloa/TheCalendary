@@ -541,6 +541,13 @@ public async Task<IEnumerable<EventTypeModel>> GetEventTypesListAsync()
                 return OperationResult.Failure($"Failed to reset the database: {ex.Message}");
             }
         }
+        public async Task<OperationResult> ClearAll()
+        {
+            await ClearAllEventsAsync();
+            await ClearAllEventGroupsAsync();
+            await ClearAllEventTypesAsync();
+            return OperationResult.Success();
+        }
 
     }
 
