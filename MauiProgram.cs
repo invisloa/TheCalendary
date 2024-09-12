@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
+using Kalendarzyk.Mediator;
 
 namespace Kalendarzyk
 {
@@ -18,7 +20,6 @@ namespace Kalendarzyk
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                     fonts.AddFont("MaterialIcons-Regular.ttf", "GoogleMaterialFont");
                 });
-
             ;
 #if DEBUG
             builder.Logging.AddDebug();

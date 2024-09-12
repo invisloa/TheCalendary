@@ -1,4 +1,5 @@
-﻿using Kalendarzyk.Models.EventModels;
+﻿using Kalendarzyk.Mediator;
+using Kalendarzyk.Models.EventModels;
 using Kalendarzyk.Services;
 using Kalendarzyk.Services.Data;
 using Kalendarzyk.ViewModels.CCViewModels;
@@ -15,12 +16,13 @@ using System.Threading.Tasks;
 
 namespace Kalendarzyk.ViewModels.Event
 {
-    public class EventPageViewModel : BaseViewModel
+    public class EventPageViewModel : BaseViewModel,  IDisposable
     {
         // Fields
         private bool _isEditMode;
-        private EventModel _eventToEdit;
         private bool _canSubmitEvent;
+        private EventModel _eventToEdit;
+        private  IMediator _mediator;
         private IEventGroupsCCViewModel _eventGroupsCCHelper;
         private IEventRepository _eventRepository = Factory.GetEventRepository;
         private IEventsService _eventService = Factory.GetEventService;
@@ -55,11 +57,58 @@ namespace Kalendarzyk.ViewModels.Event
         // Initialize common properties
         private void InitializeCommon()
         {
+            _mediator = Factory.GetMediator;
+
             EventTypesInfoButton = Factory.CreateNewChangableFontsIconAdapter(true, "info", "info_outline");
             SelectEventTypeCommand = new RelayCommand<EventTypeViewModel>(OnEventTypeSelectedCommand);
+            // Subscribe to mediator notifications
+            _mediator.Subscribe("EventGroupAdded", OnEventTypeAdded);
+            _mediator.Subscribe("EventGroupUpdated", OnEventTypeUpdated);
+            _mediator.Subscribe("EventGroupRemoved", OnEventTypeRemoved);
 
         }
+        private void OnEventTypeAdded(object sender, object args)
+        {
+            if (args is EventTypeModel newGroup)
+            {
+                var newViewModel = new EventTypeViewModel(newGroup);
+                AllEventTypesOC.Add(newViewModel);
+            }
+        }
 
+        private void OnEventTypeUpdated(object sender, object args)
+        {
+            if (args is EventTypeModel updatedType)
+            {
+                var existingViewModel = AllEventTypesOC.FirstOrDefault(vm => vm.Id == updatedType.Id);
+                if (existingViewModel != null)
+                {
+                    existingViewModel.UpdateFromModel(updatedType);
+                    OnPropertyChanged(nameof(AllEventTypesOC));
+                }
+            }
+        }
+
+        private void OnEventTypeRemoved(object sender, object args)
+        {
+            if (args is EventGroupModel removedGroup)
+            {
+                var existingViewModel = AllEventTypesOC.FirstOrDefault(vm => vm.Id == removedGroup.Id);
+                if (existingViewModel != null)
+                {
+                    AllEventTypesOC.Remove(existingViewModel);
+                    OnPropertyChanged(nameof(AllEventTypesOC));
+                }
+            }
+        }
+
+        // Dispose Method
+        public void Dispose()
+        {
+            _mediator.Unsubscribe("EventGroupAdded", OnEventTypeAdded);
+            _mediator.Unsubscribe("EventGroupUpdated", OnEventTypeUpdated);
+            _mediator.Unsubscribe("EventGroupRemoved", OnEventTypeRemoved);
+        }
         // Properties
         public EventTypeViewModel SelectedEventType
         {
@@ -177,13 +226,9 @@ namespace Kalendarzyk.ViewModels.Event
         public RelayCommand<EventTypeViewModel> SelectEventTypeCommand { get; set; }
 
 
-
-
-
-
-
         protected void OnEventTypeSelectedCommand(EventTypeViewModel selectedEventType)
         {
+            //xxx
             SelectedEventType = selectedEventType;
             //if (!IsEditMode)
             //{

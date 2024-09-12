@@ -17,18 +17,20 @@ namespace Kalendarzyk.ViewModels.Event
     internal class AddNewEventGroupPageViewModel : BaseViewModel
     {
         // Fields
-        private readonly IEventRepository _eventRepository;
-        private Dictionary<string, ObservableCollection<string>> _stringToOCMapper;
-        private EventGroupModel _currentGroup;
         private bool _isEdit;
         private string lastSelectedIconType = "Top";
         private bool _isIconsTabSelected = true;
         private bool _isBgColorsTabSelected = false;
         private bool _isTextColorsTabSelected = false;
+
+        private readonly IEventRepository _eventRepository;
         private IEventsService _eventsService;
+        private IColorButtonsSelectorHelperClass _backGroundColorsHelper = Factory.CreateNewIColorButtonsHelperClass(startingColor: Colors.Red);
+
+        private Dictionary<string, ObservableCollection<string>> _stringToOCMapper;
+        private EventGroupModel _currentGroup;
         private EventGroupViewModel _eventGroup;
 
-        private IColorButtonsSelectorHelperClass _backGroundColorsHelper = Factory.CreateNewIColorButtonsHelperClass(startingColor: Colors.Red);
 
         // Constructors
         #region Constructors

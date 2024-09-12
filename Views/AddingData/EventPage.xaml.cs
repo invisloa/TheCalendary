@@ -1,3 +1,4 @@
+using Kalendarzyk.Mediator;
 using Kalendarzyk.Models.EventModels;
 using Kalendarzyk.ViewModels.Event;
 
