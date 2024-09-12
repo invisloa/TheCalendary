@@ -39,7 +39,7 @@
 
             <!--MOVE THOSE 3 TO ExtraOptionsSelectorCC-->
             <!--VALUE CC-->
-            <customControls:MeasurementSelectorCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsValueBtnSelected}"/>
+            <customControls:MeasurementSelectorCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsValueTypeSelected}"/>
             <!--MicroTasks CC-->
             <customControls:MicroTasksListCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsMicroTasksBtnSelected}" />
             <!--Possible Colors of events to choose-->
