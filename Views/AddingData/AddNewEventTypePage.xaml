@@ -31,7 +31,6 @@
             </Frame>
 
         </Grid>
-add new event extra oprions not working micro tasks value date
             <!-- Event Group selector -->
             <customControls:EventGroupsSelectorCC BindingContext="{Binding Source={x:Reference AddNewEventTypePageName}, Path=BindingContext}"/>
 
@@ -39,7 +38,7 @@ add new event extra oprions not working micro tasks value date
 
             <!--MOVE THOSE 3 TO ExtraOptionsSelectorCC-->
             <!--VALUE CC-->
-            <customControls:MeasurementSelectorCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsValueType}"/>
+            <customControls:MeasurementSelectorCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsValueTypeSelected}"/>
             <!--MicroTasks CC-->
             <customControls:MicroTasksListCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsMicroTasksType}" />
             <!--Possible Colors of events to choose-->

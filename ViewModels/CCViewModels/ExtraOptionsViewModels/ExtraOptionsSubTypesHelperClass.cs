@@ -71,7 +71,7 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 
         private void ConfigureForValueType()
         {
-            IsValueType = true;
+            IsValueTypeSelected = true;
             ExtraOptionsButtonsSelectors[1].IsEnabled = false;
             ExtraOptionsButtonsSelectors[1].ButtonCommand = null;
             DefaultMeasurementSelectorCCHelper = Factory.CreateNewMeasurementSelectorCCHelperClass();
@@ -117,7 +117,7 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 
         protected override void OnIsEventValueType(SelectableButtonViewModel clickedButton)
         {
-            IsValueType = UpdateButtonState(clickedButton);
+            IsValueTypeSelected = UpdateButtonState(clickedButton);
         }
     }
 }

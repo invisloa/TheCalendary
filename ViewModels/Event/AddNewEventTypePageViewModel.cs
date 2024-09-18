@@ -180,7 +180,7 @@ namespace Kalendarzyk.ViewModels
                     _currentType.EventGroup = EventGroupsCCHelper.SelectedEventGroup;
                     _currentType.EventTypeName = TypeName;
                     _currentType.EventTypeColorString = ColorButtonsHelperClass.SelectedColor.ToArgbHex();
-                    if (ExtraOptionsHelperToChangeName.IsValueType)
+                    if (ExtraOptionsHelperToChangeName.IsValueTypeSelected)
                         _currentType.DefaultQuantity = ExtraOptionsHelperToChangeName.DefaultMeasurementSelectorCCHelper.QuantityAmount;
                     _currentType.DefaultMicroTasks = ExtraOptionsHelperToChangeName.MicroTasksCCAdapter.MicroTasksOC;
 
@@ -190,7 +190,7 @@ namespace Kalendarzyk.ViewModels
             else
             {
                     //var timespan = EventTypeExtraOptionsHelper.IsDefaultEventTimespanSelected ? DefaultEventTimespanCCHelper.GetDuration() : TimeSpan.Zero;
-                    var quantityAmount = ExtraOptionsHelperToChangeName.IsValueType ? ExtraOptionsHelperToChangeName.DefaultMeasurementSelectorCCHelper.QuantityAmount : null;
+                    var quantityAmount = ExtraOptionsHelperToChangeName.IsValueTypeSelected ? ExtraOptionsHelperToChangeName.DefaultMeasurementSelectorCCHelper.QuantityAmount : null;
                     var microTasks = ExtraOptionsHelperToChangeName.IsMicroTasksType ? new List<MicroTaskModel>(ExtraOptionsHelperToChangeName.MicroTasksCCAdapter.MicroTasksOC) : null;
                     var newEventType = Factory.CreateNewEventType(EventGroupsCCHelper.SelectedEventGroup, TypeName, ColorButtonsHelperClass.SelectedColor.ToArgbHex(), TimeSpan.FromHours(1), quantityAmount, microTasks);
                     await _eventRepository.AddEventTypeAsync(newEventType);

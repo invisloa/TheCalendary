@@ -220,7 +220,7 @@ namespace Kalendarzyk.ViewModels.Event
         public DateStartEndCC DateStartEndCC { get; set; }
 
         // Commands
-        public AsyncRelayCommand AsyncSubmitEventCommand { get; set; }
+        public AsyncRelayCommand AsyncSubmitEventCommand { get; set; }      add event to chack xxx
         public AsyncRelayCommand AsyncDeleteEventCommand { get; set; }
         public AsyncRelayCommand AsyncShareEventCommand { get; set; }
         public RelayCommand<EventTypeViewModel> SelectEventTypeCommand { get; set; }
@@ -236,6 +236,8 @@ namespace Kalendarzyk.ViewModels.Event
 
             //    SetEndExactTimeAccordingToEventType();
             //}
+            ExtraOptionsHelperToChangeName.OnEventTypeChanged(selectedEventType.EventTypeModel);
+
             SetVisualsForSelectedEventType();
         }
         protected void SetVisualsForSelectedEventType()

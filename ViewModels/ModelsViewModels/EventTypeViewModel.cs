@@ -9,6 +9,7 @@ namespace Kalendarzyk.ViewModels.ModelsViewModels
     {
         
         private EventTypeModel _eventTypeModel;
+        public EventTypeModel EventTypeModel => _eventTypeModel;
 
         public EventTypeViewModel(EventTypeModel model)
         {

@@ -39,6 +39,7 @@ namespace Kalendarzyk.Services.Data
                 await _database.CreateTableAsync<EventTypeModel>();
                 await _database.CreateTableAsync<EventModel>();
                 await _database.CreateTableAsync<MicroTaskModel>();
+                await _database.CreateTableAsync<QuantityModel>();
 
             }
             catch (Exception ex)
@@ -335,6 +336,8 @@ public async Task<IEnumerable<EventTypeModel>> GetEventTypesListAsync()
                             et.EventTypeColorString, 
                             et.DefaultEventTimeSpanString,
                             et.IsValueType,
+                            et.MeasurementUnit,
+                            et.DefaultValue,    
                             et.IsMicroTaskType,
                             eg.Id AS EventGroupId, 
                             eg.GroupName,
@@ -343,6 +346,7 @@ public async Task<IEnumerable<EventTypeModel>> GetEventTypesListAsync()
                             im.ElementName, 
                             im.BackgroundColorString, 
                             im.TextColorString 
+                            
                           FROM 
                             EventTypeModel et 
                           LEFT JOIN 
@@ -352,7 +356,9 @@ public async Task<IEnumerable<EventTypeModel>> GetEventTypesListAsync()
                           LEFT JOIN 
                             IconModel im 
                           ON 
-                            eg.SelectedVisualElementId = im.Id";
+                            eg.SelectedVisualElementId = im.Id
+
+";
 
                 // Create a command with the SQL query
                 using (var command = new SqliteCommand(query, connection))
@@ -372,22 +378,45 @@ public async Task<IEnumerable<EventTypeModel>> GetEventTypesListAsync()
                         var isValueType = reader.GetBoolean(reader.GetOrdinal("IsValueType"));
                         var isMicroTaskType = reader.GetBoolean(reader.GetOrdinal("IsMicroTaskType"));
 
-                        // Initialize EventTypeModel
-                        var eventType = new EventTypeModel
-                        {
-                            Id = eventTypeId,
-                            EventGroupId = eventGroupId,
-                            EventTypeName = eventTypeName,
-                            EventTypeColorString = eventTypeColorString,
-                            DefaultEventTimeSpanString = defaultEventTimeSpan,
-                            DefaultEventTimeSpan = TimeSpan.Parse(defaultEventTimeSpan),
-                            IsValueType = isValueType,
-                            IsMicroTaskType = isMicroTaskType,
-                            DefaultMicroTasks = new List<MicroTaskModel>() // Initialize the list for MicroTasks
-                        };
 
-                        // Initialize EventGroupModel if present
-                        if (!reader.IsDBNull(reader.GetOrdinal("EventGroupId")))
+                            // Initialize EventTypeModel
+                            var eventType = new EventTypeModel
+                            {
+                                Id = eventTypeId,
+                                EventGroupId = eventGroupId,
+                                EventTypeName = eventTypeName,
+                                EventTypeColorString = eventTypeColorString,
+                                DefaultEventTimeSpanString = defaultEventTimeSpan,
+                                DefaultEventTimeSpan = TimeSpan.Parse(defaultEventTimeSpan),
+                                IsValueType = isValueType,
+                                IsMicroTaskType = isMicroTaskType,
+                                DefaultMicroTasks = new List<MicroTaskModel>() // Initialize the list for MicroTasks
+                            };
+                            var defaultValue = reader.IsDBNull(reader.GetOrdinal("DefaultValue"))
+                            ? (decimal?)null
+                            : reader.GetDecimal(reader.GetOrdinal("DefaultValue"));
+                                                    var measurementUnitString = reader.IsDBNull(reader.GetOrdinal("MeasurementUnit"))
+                            ? null
+                            : reader.GetString(reader.GetOrdinal("MeasurementUnit"));
+
+                            MeasurementUnit? measurementUnit = null;
+
+                            if (measurementUnitString != null && Enum.TryParse<MeasurementUnit>(measurementUnitString, out var parsedUnit))
+                            {
+                                measurementUnit = parsedUnit;
+                                eventType.DefaultQuantity = new QuantityModel(measurementUnit.Value, defaultValue.Value);
+                            }
+
+
+
+
+
+
+
+
+
+                            // Initialize EventGroupModel if present
+                            if (!reader.IsDBNull(reader.GetOrdinal("EventGroupId")))
                         {
                             var eventGroup = new EventGroupModel
                             {

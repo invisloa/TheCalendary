@@ -40,7 +40,7 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 
 			if (EventType.IsValueType)
 			{
-				IsValueType = true;
+				IsValueTypeSelected = true;
 				DefaultMeasurementSelectorCCHelper = Factory.CreateNewMeasurementSelectorCCHelperClass();
 				DefaultMeasurementSelectorCCHelper.QuantityAmount = new QuantityModel(DefaultMeasurementSelectorCCHelper.SelectedMeasurementUnit.TypeOfMeasurementUnit, DefaultMeasurementSelectorCCHelper.QuantityValue);
 				if (EventType.DefaultQuantity != null && EventType.DefaultQuantity.Value != 0)
@@ -71,14 +71,14 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 		}
 		private void InitializeExtraOptionsButtons() // TODO JO XXX REFACTOR THIS to be more modular
 		{
-			ExtraOptionsButtonsSelectors.Add(new SelectableButtonViewModel("Micro Tasks", false, new RelayCommand<SelectableButtonViewModel>(OnIsMicroTasksSelected), isEnabled: EventType?.IsMicroTaskType == true));
+			ExtraOptionsButtonsSelectors.Add(new SelectableButtonViewModel("Micro dupa", false, new RelayCommand<SelectableButtonViewModel>(OnIsMicroTasksSelected), isEnabled: EventType?.IsMicroTaskType == true));
 			ExtraOptionsButtonsSelectors.Add(new SelectableButtonViewModel("Value", false, new RelayCommand<SelectableButtonViewModel>(OnIsEventValueType), isEnabled: EventType?.IsValueType == true));
 			ExtraOptionsButtonsSelectors.Add(new SelectableButtonViewModel("DATE", false, new RelayCommand<SelectableButtonViewModel>(OnIsDateControlsSelectedCommand), isEnabled: EventType != null));
 		}
 		private void ReloadExtraOptionsButtons() // TODO JO XXX REFACTOR THIS to be more modular
 		{
 			ExtraOptionsButtonsSelectors[1].IsEnabled = EventType?.IsValueType ?? true;
-			ExtraOptionsButtonsSelectors[1].IsSelected = IsValueType;
+			ExtraOptionsButtonsSelectors[1].IsSelected = IsValueTypeSelected;
 			ExtraOptionsButtonsSelectors[0].IsEnabled = EventType?.IsMicroTaskType ?? true;
 			ExtraOptionsButtonsSelectors[0].IsSelected = IsMicroTasksType;
 			ExtraOptionsButtonsSelectors[2].IsEnabled = true;
@@ -110,12 +110,13 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 				else
 				{
 					MicroTasksCCAdapter.MicroTasksOC = selectedEventType.DefaultMicroTasks;
+					//UpdateButtonState(ExtraOptionsButtonsSelectors[0]);	// todo jo refactor this some day...
 				}
 			}
 
 
-			IsValueType = selectedEventType.IsValueType ? true : false;
-			if (IsValueType)
+			IsValueTypeSelected = selectedEventType.IsValueType ? true : false;
+			if (IsValueTypeSelected)
 			{
 				DefaultMeasurementSelectorCCHelper = Factory.CreateNewMeasurementSelectorCCHelperClass();
 				// TODO chcange this so it will look for types in similair families (kg, g, mg, etc...)
@@ -125,8 +126,10 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 				DefaultMeasurementSelectorCCHelper.MeasurementUnitsOC = new ObservableCollection<MeasurementUnitItem>(measurementUnitsForSelectedType);
 				DefaultMeasurementSelectorCCHelper.SelectPropperMeasurementData(selectedEventType);
 				OnPropertyChanged(nameof(DefaultMeasurementSelectorCCHelper.MeasurementUnitsOC));
-			}
-			else
+                UpdateButtonState(ExtraOptionsButtonsSelectors[1]);	// todo jo refactor this some day...
+
+            }
+            else
 			{
 				DefaultMeasurementSelectorCCHelper.QuantityAmount = null;
 			}

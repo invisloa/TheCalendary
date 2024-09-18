@@ -22,13 +22,13 @@ namespace Kalendarzyk.Views.CustomControls.ExtraOptionsCC.ExtraOptionsViewModels
             }
         }
 
-        private bool _isValueType;
-        public bool IsValueType
+        private bool _isValueTypeSelected;
+        public bool IsValueTypeSelected
         {
-            get => _isValueType;
+            get => _isValueTypeSelected;
             set
             {
-                SetProperty(ref _isValueType, value);
+                SetProperty(ref _isValueTypeSelected, value);
 
             }
         }
@@ -76,7 +76,7 @@ namespace Kalendarzyk.Views.CustomControls.ExtraOptionsCC.ExtraOptionsViewModels
 
         protected virtual void OnIsEventValueType(SelectableButtonViewModel clickedButton)
         {
-            IsValueType = UpdateButtonState(clickedButton);
+            IsValueTypeSelected = UpdateButtonState(clickedButton);
         }
 
         protected bool UpdateButtonState(SelectableButtonViewModel clickedButton)
