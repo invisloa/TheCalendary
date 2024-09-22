@@ -27,11 +27,13 @@ namespace Kalendarzyk.ViewModels
         private string _typeName;
         private IEventRepository _eventRepository;
         private IColorButtonsSelectorHelperClass _colorButtonsHelperClass = Factory.CreateNewIColorButtonsHelperClass(startingColor: Colors.Red);
+
         private bool _canSubmitTypeCommand;
         private bool _isEventGroupSelected;
         #endregion
 
         #region Properties
+
         public bool CanSubmitTypeCommand
             {
             get => _canSubmitTypeCommand;
@@ -103,7 +105,7 @@ namespace Kalendarzyk.ViewModels
 
         #region Constructors
 
-        // Constructor for create mode
+        // ctor for create mode
         public AddNewEventTypePageViewModel()
         {
             try
@@ -118,7 +120,7 @@ namespace Kalendarzyk.ViewModels
             }
         }
 
-        // Constructor for edit mode
+        // ctor for edit mode
         public AddNewEventTypePageViewModel(EventTypeModel currentType)
         {
             CurrentType = currentType;
@@ -181,8 +183,9 @@ namespace Kalendarzyk.ViewModels
                     _currentType.EventTypeName = TypeName;
                     _currentType.EventTypeColorString = ColorButtonsHelperClass.SelectedColor.ToArgbHex();
                     if (ExtraOptionsHelperToChangeName.IsValueTypeSelected)
-                        _currentType.DefaultQuantity = ExtraOptionsHelperToChangeName.DefaultMeasurementSelectorCCHelper.QuantityAmount;
+                       _currentType.DefaultQuantity = ExtraOptionsHelperToChangeName.DefaultMeasurementSelectorCCHelper.QuantityAmount;
                     _currentType.DefaultMicroTasks = ExtraOptionsHelperToChangeName.MicroTasksCCAdapter.MicroTasksOC;
+                _currentType.DefaultEventTimeSpan = DefaultEventTimespanCCHelper.GetDuration();
 
                     await _eventRepository.UpdateEventTypeAsync(_currentType);
                     await Shell.Current.GoToAsync("..");    // TODO CHANGE NOT WORKING!!!
@@ -192,9 +195,9 @@ namespace Kalendarzyk.ViewModels
                     //var timespan = EventTypeExtraOptionsHelper.IsDefaultEventTimespanSelected ? DefaultEventTimespanCCHelper.GetDuration() : TimeSpan.Zero;
                     var quantityAmount = ExtraOptionsHelperToChangeName.IsValueTypeSelected ? ExtraOptionsHelperToChangeName.DefaultMeasurementSelectorCCHelper.QuantityAmount : null;
                     var microTasks = ExtraOptionsHelperToChangeName.IsMicroTasksType ? new List<MicroTaskModel>(ExtraOptionsHelperToChangeName.MicroTasksCCAdapter.MicroTasksOC) : null;
-                    var newEventType = Factory.CreateNewEventType(EventGroupsCCHelper.SelectedEventGroup, TypeName, ColorButtonsHelperClass.SelectedColor.ToArgbHex(), TimeSpan.FromHours(1), quantityAmount, microTasks);
+                    var newEventType = Factory.CreateNewEventType(EventGroupsCCHelper.SelectedEventGroup, TypeName, ColorButtonsHelperClass.SelectedColor.ToArgbHex(), DefaultEventTimespanCCHelper.GetDuration(), quantityAmount, microTasks);
                     await _eventRepository.AddEventTypeAsync(newEventType);
-                    TypeName = string.Empty;
+                await Shell.Current.GoToAsync("..");    // TODO CHANGE NOT WORKING!!!
             }
         }
 

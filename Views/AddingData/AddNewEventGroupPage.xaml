@@ -3,7 +3,7 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Kalendarzyk.Views.AddNewEventGroupPage"
              xmlns:customControls="clr-namespace:Kalendarzyk.Views.CustomControls.Buttons"
-             x:Name="Dupa"
+             x:Name="AddNewEventTypePageName"
              Title="AddNewEventGroupPage">
     <ScrollView    BackgroundColor="{DynamicResource MainBackgroundColor}">
         <StackLayout>
@@ -53,7 +53,7 @@
                         <DataTemplate>
                             <Grid>
                                 <Button BackgroundColor="Transparent"
-                                    Command="{Binding Path=BindingContext.ExactIconSelectedCommand, Source={x:Reference Dupa}}" 
+                                    Command="{Binding Path=BindingContext.ExactIconSelectedCommand, Source={x:Reference AddNewEventTypePageName}}" 
                                     CommandParameter="{Binding .}"
                                     HorizontalOptions="FillAndExpand" 
                                     VerticalOptions="FillAndExpand"/>
@@ -63,7 +63,7 @@
                                            VerticalOptions="Center">
                                     <Label.GestureRecognizers>
                                         <TapGestureRecognizer 
-                                        Command="{Binding Path=BindingContext.ExactIconSelectedCommand, Source={x:Reference Dupa}}" 
+                                        Command="{Binding Path=BindingContext.ExactIconSelectedCommand, Source={x:Reference AddNewEventTypePageName}}" 
                                         CommandParameter="{Binding .}" 
                                        />
                                     </Label.GestureRecognizers>

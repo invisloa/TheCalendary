@@ -33,6 +33,17 @@ namespace Kalendarzyk.Views.CustomControls.ExtraOptionsCC.ExtraOptionsViewModels
             }
         }
 
+        private bool _isDefaultTimespanSelected;
+        public bool IsDefaultTimespanSelected
+        {
+            get => _isDefaultTimespanSelected;
+            set
+            {
+                SetProperty(ref _isDefaultTimespanSelected, value);
+
+            }
+        }
+        
 
         private MicroTasksCCAdapterVM _microTasksCCAdapter;
         public MicroTasksCCAdapterVM MicroTasksCCAdapter
@@ -74,7 +85,7 @@ namespace Kalendarzyk.Views.CustomControls.ExtraOptionsCC.ExtraOptionsViewModels
             IsMicroTasksType = UpdateButtonState(clickedButton);
         }
 
-        protected virtual void OnIsEventValueType(SelectableButtonViewModel clickedButton)
+        protected virtual void OnIsEventValueTypeSelected(SelectableButtonViewModel clickedButton)
         {
             IsValueTypeSelected = UpdateButtonState(clickedButton);
         }

@@ -45,7 +45,7 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 				DefaultMeasurementSelectorCCHelper.QuantityAmount = new QuantityModel(DefaultMeasurementSelectorCCHelper.SelectedMeasurementUnit.TypeOfMeasurementUnit, DefaultMeasurementSelectorCCHelper.QuantityValue);
 				if (EventType.DefaultQuantity != null && EventType.DefaultQuantity.Value != 0)
 				{
-					OnIsEventValueType(ExtraOptionsButtonsSelectors[1]); // TODO refactor this
+					OnIsEventValueTypeSelected(ExtraOptionsButtonsSelectors[1]); // TODO refactor this
 					DefaultMeasurementSelectorCCHelper.SelectedMeasurementUnit = DefaultMeasurementSelectorCCHelper.MeasurementUnitsOC.Where(x => x.TypeOfMeasurementUnit == EventType.DefaultQuantity.Unit).First();
 					DefaultMeasurementSelectorCCHelper.QuantityValue = EventType.DefaultQuantity.Value;
 				}
@@ -71,8 +71,8 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 		}
 		private void InitializeExtraOptionsButtons() // TODO JO XXX REFACTOR THIS to be more modular
 		{
-			ExtraOptionsButtonsSelectors.Add(new SelectableButtonViewModel("Micro dupa", false, new RelayCommand<SelectableButtonViewModel>(OnIsMicroTasksSelected), isEnabled: EventType?.IsMicroTaskType == true));
-			ExtraOptionsButtonsSelectors.Add(new SelectableButtonViewModel("Value", false, new RelayCommand<SelectableButtonViewModel>(OnIsEventValueType), isEnabled: EventType?.IsValueType == true));
+			ExtraOptionsButtonsSelectors.Add(new SelectableButtonViewModel("Micro tasks", false, new RelayCommand<SelectableButtonViewModel>(OnIsMicroTasksSelected), isEnabled: EventType?.IsMicroTaskType == true));
+			ExtraOptionsButtonsSelectors.Add(new SelectableButtonViewModel("Value", false, new RelayCommand<SelectableButtonViewModel>(OnIsEventValueTypeSelected), isEnabled: EventType?.IsValueType == true));
 			ExtraOptionsButtonsSelectors.Add(new SelectableButtonViewModel("DATE", false, new RelayCommand<SelectableButtonViewModel>(OnIsDateControlsSelectedCommand), isEnabled: EventType != null));
 		}
 		private void ReloadExtraOptionsButtons() // TODO JO XXX REFACTOR THIS to be more modular

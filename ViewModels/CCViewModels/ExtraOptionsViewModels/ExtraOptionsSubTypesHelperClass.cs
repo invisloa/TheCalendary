@@ -47,7 +47,8 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
             if (ExtraOptionsButtonsSelectors.Count == 0)
             {
                 ExtraOptionsButtonsSelectors.Add(new SelectableButtonViewModel("Micro Tasks(D)", false, new RelayCommand<SelectableButtonViewModel>(OnIsMicroTasksSelected), isEnabled: true));
-                ExtraOptionsButtonsSelectors.Add(new SelectableButtonViewModel("Value(D)", false, new RelayCommand<SelectableButtonViewModel>(OnIsEventValueType), isEnabled: true));
+                ExtraOptionsButtonsSelectors.Add(new SelectableButtonViewModel("Value(D)", false, new RelayCommand<SelectableButtonViewModel>(OnIsEventValueTypeSelected), isEnabled: true));
+                ExtraOptionsButtonsSelectors.Add(new SelectableButtonViewModel("Default timespan", false, new RelayCommand<SelectableButtonViewModel>(OnDefaultTimespanSelected), isEnabled: true));
                 ExtraOptionsButtonsSelectors.Add(new SelectableButtonViewModel("BG color", false, new RelayCommand<SelectableButtonViewModel>(OnColorBtnSelected), isEnabled: true));
             }
             else
@@ -79,7 +80,7 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
 
             if (EventType.DefaultQuantity != null)
             {
-                OnIsEventValueType(ExtraOptionsButtonsSelectors[1]);
+                OnIsEventValueTypeSelected(ExtraOptionsButtonsSelectors[1]);
                 var unitToSelect = DefaultMeasurementSelectorCCHelper.MeasurementUnitsOC.First(x => x.TypeOfMeasurementUnit == EventType.DefaultQuantity.Unit);
                 DefaultMeasurementSelectorCCHelper.SelectedMeasurementUnit = unitToSelect;
                 DefaultMeasurementSelectorCCHelper.MeasurementUnitsOC = new ObservableCollection<MeasurementUnitItem> { unitToSelect };
@@ -115,9 +116,15 @@ namespace Kalendarzyk.Views.CustomControls.CCViewModels
             IsMicroTasksType = UpdateButtonState(clickedButton);
         }
 
-        protected override void OnIsEventValueType(SelectableButtonViewModel clickedButton)
+        protected override void OnIsEventValueTypeSelected(SelectableButtonViewModel clickedButton)
         {
             IsValueTypeSelected = UpdateButtonState(clickedButton);
         }
+        void OnDefaultTimespanSelected(SelectableButtonViewModel clickedButton)
+        {
+            IsDefaultTimespanSelected = UpdateButtonState(clickedButton);
+        }
+
+        
     }
 }

@@ -34,18 +34,25 @@
             <!-- Event Group selector -->
             <customControls:EventGroupsSelectorCC BindingContext="{Binding Source={x:Reference AddNewEventTypePageName}, Path=BindingContext}"/>
 
-            <customControlsExtraOption:ExtraOptionsSelectorCC  />
 
-            <!--MOVE THOSE 3 TO ExtraOptionsSelectorCC-->
+
+
+
+
+            <!-- Extra options buttons-->
+            <customControlsExtraOption:ExtraOptionsSelectorCC  /><!--MOVE THIS TO SOME CC with the below controls-->
+
             <!--VALUE CC-->
             <customControls:MeasurementSelectorCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsValueTypeSelected}"/>
             <!--MicroTasks CC-->
             <customControls:MicroTasksListCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsMicroTasksType}" />
             <!--Possible Colors of events to choose-->
-            <customControlsButtons:ColorButtonsSelectorCC Margin="5" IsVisible="{Binding ExtraOptionsHelperToChangeName.IsColorBtnSelected}"
-               ColorButtonsSelectorHelper="{Binding ColorButtonsHelperClass}" />
-            <!--Down of the screen buttons-->
+            <customControlsButtons:ColorButtonsSelectorCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsColorBtnSelected}"
+                                                          ColorButtonsSelectorHelper="{Binding ColorButtonsHelperClass}" />
 
-    </StackLayout>
+            <customControls:DefaultEventTimespanCC IsVisible="{Binding ExtraOptionsHelperToChangeName.IsDefaultTimespanSelected}" />
+
+
+        </StackLayout>
 </ScrollView>
 </ContentPage>

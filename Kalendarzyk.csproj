@@ -102,6 +102,9 @@
 	  <MauiXaml Update="Views\CustomControls\DateStartEndCC.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Views\CustomControls\DefaultEventTimespanCC.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Views\CustomControls\EventGroupsSelectorCC.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
