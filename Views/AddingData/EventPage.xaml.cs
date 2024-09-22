@@ -29,7 +29,7 @@ namespace Kalendarzyk.Views
 		//} 
 		public EventPage()
 		{
-			var today = DateTime.Today;
+			var today = DateTime.Now;
 			InitializeComponent();
 			BindingContext = new EventPageViewModel(today);
 		}

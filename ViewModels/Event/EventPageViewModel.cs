@@ -28,6 +28,7 @@ namespace Kalendarzyk.ViewModels.Event
         private IEventsService _eventService = Factory.GetEventService;
         private ObservableCollection<EventTypeViewModel> _eventTypesOC;
         private ChangableFontsIconCCViewModel _eventTypesInfoButton;
+        private ChangableFontsIconCCViewModel _isCompletedButton;
         private EventTypeViewModel _selectedEventType;
 
         // ctor for adding events
@@ -38,6 +39,10 @@ namespace Kalendarzyk.ViewModels.Event
             ExtraOptionsHelperToChangeName = Factory.CreateNewExtraOptionsEventHelperClass();
             EventGroupsCCHelper = Factory.CreateNewIEventGroupViewModelClass(_eventService.AllEventGroupsOC);
             AllEventTypesOC = new ObservableCollection<EventTypeViewModel>(_eventService.AllEventTypesOC.Select(x => new EventTypeViewModel(x)));
+            EventStartDate = selectedDate;
+            EventEndDate = selectedDate;
+            StartExactTime = selectedDate.TimeOfDay;
+            EndExactTime = selectedDate.TimeOfDay+TimeSpan.FromHours(1);
             InitializeCommon();
         }
 
@@ -60,6 +65,7 @@ namespace Kalendarzyk.ViewModels.Event
             _mediator = Factory.GetMediator;
 
             EventTypesInfoButton = Factory.CreateNewChangableFontsIconAdapter(true, "info", "info_outline");
+            IsCompletedButton = Factory.CreateNewChangableFontsIconAdapter(false, "check_box", "check_box_outline_blank");
             SelectEventTypeCommand = new RelayCommand<EventTypeViewModel>(OnEventTypeSelectedCommand);
             // Subscribe to mediator notifications
             _mediator.Subscribe("EventGroupAdded", OnEventTypeAdded);
@@ -158,6 +164,15 @@ namespace Kalendarzyk.ViewModels.Event
                 OnPropertyChanged();
             }
         }
+        public ChangableFontsIconCCViewModel IsCompletedButton
+        {
+            get => _isCompletedButton;
+            set
+            {
+                _isCompletedButton = value;
+                OnPropertyChanged();
+            }
+        }
 
         public string PageTitle => _isEditMode ? "EDIT EVENT" : "ADD NEW EVENT";
         public string SubmitButtonText => _isEditMode ? "SUBMIT CHANGES" : "ADD NEW EVENT";
@@ -213,14 +228,41 @@ namespace Kalendarzyk.ViewModels.Event
             }
         }
 
+        private TimeSpan _startExactTime;
+        public TimeSpan StartExactTime
+        {
+            get => _startExactTime;
+            set
+            {
+                if (_startExactTime != value)
+                {
+                    _startExactTime = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+        private TimeSpan _endExactTime;
+        public TimeSpan EndExactTime
+        {
+            get => _endExactTime;
+            set
+            {
+                if (_endExactTime != value)
+                {
+                    _endExactTime = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         // Other Properties
         public ExtraOptionsEventsHelperClass ExtraOptionsHelperToChangeName { get; set; }
         public MicroTasksCCAdapterVM MicroTasksCCAdapterVM { get; set; }
         public MeasurementSelectorCCViewModel MeasurementSelectorCCViewModel { get; set; }
-        public DateStartEndCC DateStartEndCC { get; set; }
+        //public DateStartEndCC DateStartEndCC { get; set; }  // ??? is it needed ???
 
         // Commands
-        public AsyncRelayCommand AsyncSubmitEventCommand { get; set; }      add event to chack xxx
+        public AsyncRelayCommand AsyncSubmitEventCommand { get; set; } 
         public AsyncRelayCommand AsyncDeleteEventCommand { get; set; }
         public AsyncRelayCommand AsyncShareEventCommand { get; set; }
         public RelayCommand<EventTypeViewModel> SelectEventTypeCommand { get; set; }

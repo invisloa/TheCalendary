@@ -18,7 +18,7 @@
             <StackLayout>
                 <StackLayout Orientation="Vertical">
                     <Label Text="START" VerticalOptions="Center" HorizontalOptions="CenterAndExpand" TextColor="{DynamicResource MainTextColor}" FontAttributes="Bold"  Padding="5" />
-                    <DatePicker HorizontalOptions="CenterAndExpand" TextColor="{DynamicResource MainTextColor}" Date="{Binding StartDateTime, Mode=TwoWay}" />
+                    <DatePicker HorizontalOptions="CenterAndExpand" TextColor="{DynamicResource MainTextColor}" Date="{Binding EventStartDate, Mode=TwoWay}" />
                 </StackLayout>
                <TimePicker Format="HH:mm" 
                         Time="{Binding StartExactTime, Mode=TwoWay}"  TextColor="{DynamicResource MainTextColor}"
@@ -38,7 +38,7 @@
                 <StackLayout Orientation="Vertical">
 
                     <Label Text="END" VerticalOptions="Center" HorizontalOptions="CenterAndExpand" TextColor="{DynamicResource MainTextColor}" FontAttributes="Bold" Padding="5"/>
-                    <DatePicker HorizontalOptions="CenterAndExpand" TextColor="{DynamicResource MainTextColor}" Date="{Binding EndDateTime, Mode=TwoWay}"  />
+                    <DatePicker HorizontalOptions="CenterAndExpand" TextColor="{DynamicResource MainTextColor}" Date="{Binding EventEndDate, Mode=TwoWay}"  />
                 </StackLayout>
 
                 <TimePicker Format="HH:mm" TextColor="{DynamicResource MainTextColor}"

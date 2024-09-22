@@ -33,7 +33,7 @@
                     IsVisible="{Binding IsDeleteButtonVisible, Source={RelativeSource AncestorType={x:Type local:OperationsBarCC}}}" 
                     Margin="10"
                     FontSize="44"/>
-            <!--<customControls:ChangableIconCC  Grid.Column="0" HorizontalOptions="Start" 
+            <customControls:ChangableIconCC  Grid.Column="0" HorizontalOptions="Start" 
                 IsVisible="{Binding IsEventTypesButtonisible, Source={RelativeSource AncestorType={x:Type local:OperationsBarCC}}}" 
                 IconFontText="{Binding EventTypesInfoButton.IconFontText}"
                 IsSelectedCommand="{Binding EventTypesInfoButton.IsSelectedCommand}"/>
@@ -41,7 +41,7 @@
                 IsVisible="{Binding IsCompletedButtonVisible, Source={RelativeSource AncestorType={x:Type local:OperationsBarCC}}}" 
                 IconFontText="{Binding IsCompletedButton.IconFontText}"
                 IsSelectedCommand="{Binding IsCompletedButton.IsSelectedCommand}"
-                                             IconTextColor="BlanchedAlmond"/>-->
+                                             IconTextColor="BlanchedAlmond"/>
 
 
 
