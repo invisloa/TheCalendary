@@ -42,7 +42,6 @@ namespace Kalendarzyk.ViewModels.Event
             EventStartDate = selectedDate;
             EventEndDate = selectedDate;
             StartExactTime = selectedDate.TimeOfDay;
-            EndExactTime = selectedDate.TimeOfDay+TimeSpan.FromHours(1);
             InitializeCommon();
         }
 
@@ -55,7 +54,6 @@ namespace Kalendarzyk.ViewModels.Event
             EventGroupsCCHelper = Factory.CreateNewIEventGroupViewModelClass(_eventService.AllEventGroupsOC);
             EventGroupsCCHelper.EventGroupSelectedCommand.Execute(EventGroupsCCHelper.EventGroupsVisualsOC.Where(x => x.Id == eventToEdit.EventType.EventGroupId).First()); // to check
             AllEventTypesOC = new ObservableCollection<EventTypeViewModel>(_eventService.AllEventTypesOC.Select(x => new EventTypeViewModel(x)));
-            // to change
             InitializeCommon();
         }
 
@@ -67,17 +65,24 @@ namespace Kalendarzyk.ViewModels.Event
             EventTypesInfoButton = Factory.CreateNewChangableFontsIconAdapter(true, "info", "info_outline");
             IsCompletedButton = Factory.CreateNewChangableFontsIconAdapter(false, "check_box", "check_box_outline_blank");
             SelectEventTypeCommand = new RelayCommand<EventTypeViewModel>(OnEventTypeSelectedCommand);
-            // Subscribe to mediator notifications
-            _mediator.Subscribe("EventGroupAdded", OnEventTypeAdded);
-            _mediator.Subscribe("EventGroupUpdated", OnEventTypeUpdated);
-            _mediator.Subscribe("EventGroupRemoved", OnEventTypeRemoved);
 
+            // Subscribe to EventType mediator notifications
+            _mediator.Subscribe("EventTypeAdded", OnEventTypeAdded);
+            _mediator.Subscribe("EventTypeUpdated", OnEventTypeUpdated);
+            _mediator.Subscribe("EventTypeRemoved", OnEventTypeRemoved);
+
+            // Subscribe to EventGroup mediator notifications
+            _mediator.Subscribe("EventGroupAdded", OnEventGroupAdded);
+            _mediator.Subscribe("EventGroupUpdated", OnEventGroupUpdated);
+            _mediator.Subscribe("EventGroupRemoved", OnEventGroupRemoved);
         }
+
+        // EventType Methods
         private void OnEventTypeAdded(object sender, object args)
         {
-            if (args is EventTypeModel newGroup)
+            if (args is EventTypeModel newType)
             {
-                var newViewModel = new EventTypeViewModel(newGroup);
+                var newViewModel = new EventTypeViewModel(newType);
                 AllEventTypesOC.Add(newViewModel);
             }
         }
@@ -97,13 +102,55 @@ namespace Kalendarzyk.ViewModels.Event
 
         private void OnEventTypeRemoved(object sender, object args)
         {
-            if (args is EventGroupModel removedGroup)
+            if (args is EventTypeModel removedType)
             {
-                var existingViewModel = AllEventTypesOC.FirstOrDefault(vm => vm.Id == removedGroup.Id);
+                var existingViewModel = AllEventTypesOC.FirstOrDefault(vm => vm.Id == removedType.Id);
                 if (existingViewModel != null)
                 {
                     AllEventTypesOC.Remove(existingViewModel);
                     OnPropertyChanged(nameof(AllEventTypesOC));
+                }
+            }
+        }
+
+        // EventGroup Methods
+        private void OnEventGroupAdded(object sender, object args)
+        {
+            if (args is EventGroupModel newGroup)
+            {
+                var newViewModel = new EventGroupViewModel(newGroup);
+                EventGroupsCCHelper.EventGroupsVisualsOC.Add(newViewModel);
+                OnPropertyChanged(nameof(EventGroupsCCHelper.EventGroupsVisualsOC));
+
+            }
+        }
+
+        private void OnEventGroupUpdated(object sender, object args)
+        {
+            if (args is EventGroupModel updatedGroup)
+            {
+                var existingViewModel = EventGroupsCCHelper.EventGroupsVisualsOC
+                    .FirstOrDefault(vm => vm.EventGroup.Id == updatedGroup.Id);
+
+                if (existingViewModel != null)
+                {
+                    existingViewModel.UpdateFromModel(updatedGroup);
+                    OnPropertyChanged(nameof(EventGroupsCCHelper.EventGroupsVisualsOC));
+                }
+            }
+        }
+
+        private void OnEventGroupRemoved(object sender, object args)
+        {
+            if (args is EventGroupModel removedGroup)
+            {
+                var existingViewModel = EventGroupsCCHelper.EventGroupsVisualsOC
+                    .FirstOrDefault(vm => vm.EventGroup.Id == removedGroup.Id);
+
+                if (existingViewModel != null)
+                {
+                    EventGroupsCCHelper.EventGroupsVisualsOC.Remove(existingViewModel);
+                    OnPropertyChanged(nameof(EventGroupsCCHelper.EventGroupsVisualsOC));
                 }
             }
         }
@@ -259,8 +306,6 @@ namespace Kalendarzyk.ViewModels.Event
         public ExtraOptionsEventsHelperClass ExtraOptionsHelperToChangeName { get; set; }
         public MicroTasksCCAdapterVM MicroTasksCCAdapterVM { get; set; }
         public MeasurementSelectorCCViewModel MeasurementSelectorCCViewModel { get; set; }
-        //public DateStartEndCC DateStartEndCC { get; set; }  // ??? is it needed ???
-
         // Commands
         public AsyncRelayCommand AsyncSubmitEventCommand { get; set; } 
         public AsyncRelayCommand AsyncDeleteEventCommand { get; set; }
@@ -272,15 +317,31 @@ namespace Kalendarzyk.ViewModels.Event
         {
             //xxx
             SelectedEventType = selectedEventType;
-            //if (!IsEditMode)
-            //{
-            //    ExtraOptionsHelperToChangeName.OnEventTypeChanged(selectedEventType);
+            if (!IsEditMode)
+            {
+                ExtraOptionsHelperToChangeName.OnEventTypeChanged(selectedEventType.EventTypeModel);
 
-            //    SetEndExactTimeAccordingToEventType();
-            //}
+                SetEndExactTimeAccordingToEventType();
+            }
             ExtraOptionsHelperToChangeName.OnEventTypeChanged(selectedEventType.EventTypeModel);
 
             SetVisualsForSelectedEventType();
+        }
+        private void SetEndExactTimeAccordingToEventType()
+        {
+            try
+            {
+                var timeSpanAdded = StartExactTime.Add(SelectedEventType.DefaultEventTimeSpan);
+                int days = (int)timeSpanAdded.TotalDays;
+                TimeSpan remainingTime = TimeSpan.FromHours(timeSpanAdded.Hours).Add(TimeSpan.FromMinutes(timeSpanAdded.Minutes)).Add(TimeSpan.FromSeconds(timeSpanAdded.Seconds));
+                EventToEdit.EndDateTime = EventToEdit.StartDateTime.AddDays(days);
+                OnPropertyChanged(nameof(EventEndDate));    
+                EndExactTime = remainingTime;
+            }
+            catch
+            {
+                EndExactTime = StartExactTime;
+            }
         }
         protected void SetVisualsForSelectedEventType()
         {
@@ -294,10 +355,7 @@ namespace Kalendarzyk.ViewModels.Event
                 }
             }
 
-
             SelectedEventType.IsSelectedToFilter = true;
-            //  deleted to check xxx // AllEventTypesOC = new ObservableCollection<EventTypeModel>(AllEventTypesOC); // ?????? this is done to trigger the property changed event
-            //var selectedEventGroup = EventGroupsCCHelper.EventGroupsVisualsOC.Where(x => x.EventGroup.Equals(SelectedEventType.EventGroup)).FirstOrDefault();
             var selectedEventGroup = EventGroupsCCHelper.EventGroupsVisualsOC.Where(x => x.EventGroup.Id == SelectedEventType.EventGroup.Id).FirstOrDefault();      
             _eventGroupsCCHelper.EventGroupSelectedCommand.Execute(selectedEventGroup);
 
